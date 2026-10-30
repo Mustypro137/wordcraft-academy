@@ -10,7 +10,7 @@ Approved by the owner on 2026-10-30 after planning Stages 1–5. Product truth l
 | Privacy | No accounts, no tracking, no ads. Data stays in the browser; export/import backup moves it |
 | Feedback | Rule-based first, hint before answer. Optional AI later, only with consent |
 | Language | English only |
-| Hosting | GitHub + Vercel (free) |
+| Hosting | GitHub + Vercel (free). Code: https://github.com/Mustypro137/wordcraft-academy (public). Live: https://wordcraft-academy-eight.vercel.app |
 | Reminder | At MVP release, plan syncing between phone and laptop |
 
 ## Learning rules
@@ -51,7 +51,7 @@ Folders are created in the step that first puts a file in them (Git does not sav
 
 | Phase | Steps |
 |---|---|
-| 0 · Setup | 1. Project + Git ✅ · 2. Design tokens + app shell ✅ · 3. Deploy to Vercel |
+| 0 · Setup | 1. Project + Git ✅ · 2. Design tokens + app shell ✅ · 3. Deploy to Vercel ✅ |
 | 1 · Core loop | 4. First 50 words · 5. Profiles + saved data · 6. Explore + word page · 7. Knowledge buttons + My Words · 8. Review · 9. Today dashboard |
 | Checkpoint | Owner uses the app for a few days; fix what feels wrong |
 | 2 · Finish MVP | 10. Sentence Builder · 11. Writing Studio · 12. Developer English · 13. Backup export/import · 14. Grow to 150–200 words · 15. Quality check → MVP release |
