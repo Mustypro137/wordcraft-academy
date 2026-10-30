@@ -25,3 +25,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Browser-check screenshots and logs (not part of the app)
+.playwright-mcp/
+.impeccable/review/

@@ -1,12 +1,28 @@
-// Temporary start page. Step 2 replaces it with the real app shell
-// (sidebar, phone tab bar and page routes).
+import { createBrowserRouter, RouterProvider } from 'react-router'
+import { AppShell } from './components/AppShell/AppShell'
+import { sections } from './components/AppShell/sections'
+import { MorePage } from './features/more/MorePage'
+import { NotFoundPage } from './features/placeholder/NotFoundPage'
+import { PlaceholderPage } from './features/placeholder/PlaceholderPage'
+
+// Routes: each web address shows one page inside the app shell.
+// Until a section is built, its address shows a placeholder page.
+const router = createBrowserRouter([
+  {
+    element: <AppShell />,
+    children: [
+      ...sections.map((section) => ({
+        path: section.path,
+        element: <PlaceholderPage section={section} />,
+      })),
+      { path: '/more', element: <MorePage /> },
+      { path: '*', element: <NotFoundPage /> },
+    ],
+  },
+])
+
 function App() {
-  return (
-    <main className="setup-check">
-      <h1>WordCraft Academy</h1>
-      <p>The project is set up. The real app starts in Step 2.</p>
-    </main>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App

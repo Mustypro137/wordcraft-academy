@@ -1,0 +1,158 @@
+/*
+  Design tokens: named values the whole app shares.
+  Components use the name (var(--ink)), never the raw value (#17213A).
+  Change a value here once and every component follows.
+*/
+
+:root {
+  /* Page and text */
+  --ground: #F4F6FA;
+  --surface: #FFFFFF;
+  --surface-2: #EBEFF6;
+  --ink: #17213A;
+  --ink-soft: #4B5672;
+  --line: #D8DEE9;
+
+  /* Navy navigation (sidebar and rail) */
+  --shell: #1B2740;
+  --shell-fg: #DDE4F2;
+  --shell-soft: #93A0BC;
+  --shell-active: #2A3A5E;
+  --shell-strong: #FFFFFF;
+
+  /* Actions and feedback */
+  --action: #22335A;
+  --action-fg: #FFFFFF;
+  --focus: #2F6FE0;
+  --error: #B4232F;
+
+  /*
+    Highlighter colors are reserved for word states. Nothing else uses them.
+    --hl-* is the soft highlight behind a word; --st-* is the strong color
+    for small marks (dots, labels). Always pair them with a text label.
+  */
+  --hl-unfamiliar: #FFE066;
+  --hl-learning: #A6D6FF;
+  --hl-known: #A3E6C3;
+  --hl-mastered: #CFBDFF;
+  --st-unfamiliar: #7A5D00;
+  --st-learning: #1D5BA3;
+  --st-known: #1B734A;
+  --st-mastered: #5A3EC2;
+
+  /* Fonts: one job each */
+  --font-ui: "Atkinson Hyperlegible Next Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-word: "Literata Variable", Georgia, "Times New Roman", serif;
+  --font-code: "JetBrains Mono Variable", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  /* Type scale: each step is the one below it x 1.2 */
+  --text-base: 1rem;
+  --text-sm: calc(var(--text-base) * 0.833);
+  --text-md: calc(var(--text-base) * 1.2);
+  --text-lg: calc(var(--text-base) * 1.44);
+  --text-xl: calc(var(--text-base) * 1.728);
+  --text-2xl: calc(var(--text-base) * 2.074);
+
+  /* Spacing: multiples of 4px */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Shape and depth */
+  --radius: 8px;
+  --radius-sm: 6px;
+  --mark-top: 0.3em;
+  --shadow: 0 1px 2px rgb(23 33 58 / 0.06), 0 2px 8px rgb(23 33 58 / 0.04);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration-fast: 150ms;
+
+  /* Layout */
+  --page-gutter: 16px;
+  --content-max: 68rem;
+  --sidebar-width: 15rem;
+  --rail-width: 5.5rem;
+  --tabbar-height: 4rem;
+
+  color-scheme: light;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --page-gutter: 32px;
+  }
+}
+
+/*
+  Dark theme. Written twice on purpose:
+  1. follow the device setting, unless the learner chose "light";
+  2. the learner chose "dark" (the switch arrives with Settings in Step 5).
+*/
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0E1422;
+    --surface: #161F33;
+    --surface-2: #1D2840;
+    --ink: #E6EBF5;
+    --ink-soft: #A6B0C7;
+    --line: #2A3653;
+    --shell: #0A0F1B;
+    --shell-fg: #DDE4F2;
+    --shell-soft: #8592AE;
+    --shell-active: #1D2944;
+    --action: #D5DFF4;
+    --action-fg: #0E1422;
+    --focus: #7FAEFF;
+    --error: #FF7A84;
+    --hl-unfamiliar: rgb(255 214 77 / 0.32);
+    --hl-learning: rgb(110 180 255 / 0.32);
+    --hl-known: rgb(100 214 156 / 0.30);
+    --hl-mastered: rgb(170 145 255 / 0.36);
+    --st-unfamiliar: #F2CF4A;
+    --st-learning: #82BDFF;
+    --st-known: #74D6A4;
+    --st-mastered: #B8A5FF;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #0E1422;
+  --surface: #161F33;
+  --surface-2: #1D2840;
+  --ink: #E6EBF5;
+  --ink-soft: #A6B0C7;
+  --line: #2A3653;
+  --shell: #0A0F1B;
+  --shell-fg: #DDE4F2;
+  --shell-soft: #8592AE;
+  --shell-active: #1D2944;
+  --action: #D5DFF4;
+  --action-fg: #0E1422;
+  --focus: #7FAEFF;
+  --error: #FF7A84;
+  --hl-unfamiliar: rgb(255 214 77 / 0.32);
+  --hl-learning: rgb(110 180 255 / 0.32);
+  --hl-known: rgb(100 214 156 / 0.30);
+  --hl-mastered: rgb(170 145 255 / 0.36);
+  --st-unfamiliar: #F2CF4A;
+  --st-learning: #82BDFF;
+  --st-known: #74D6A4;
+  --st-mastered: #B8A5FF;
+  --shadow: none;
+  color-scheme: dark;
+}
+
+/* Kids mode changes only these tokens; everything else follows */
+:root[data-age="kids"] {
+  --text-base: 1.1875rem;
+  --radius: 16px;
+  --radius-sm: 12px;
+  --mark-top: 0.05em;
+}
