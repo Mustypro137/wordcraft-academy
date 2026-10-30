@@ -25,6 +25,27 @@ export type CategoryId =
   | 'freelancing'
   | 'technology'
 
+export type AgeGroup = 'kids' | 'teens' | 'adults'
+
+/** The learner's chosen level. Separate from age group on purpose. */
+export type LearningLevel = 'beginner' | 'intermediate' | 'advanced' | 'professional'
+
+export type Theme = 'device' | 'light' | 'dark'
+
+export type TextSize = 'normal' | 'large'
+
+/** One person who learns on this device. There are no passwords. */
+export interface Profile {
+  id: string
+  name: string
+  ageGroup: AgeGroup
+  level: LearningLevel
+  theme: Theme
+  textSize: TextSize
+  /** When the profile was created, as an ISO date string */
+  createdAt: string
+}
+
 /** One vocabulary entry. Every word in src/data/words follows this shape. */
 export interface Word {
   /** Unique, lowercase, words joined by hyphens: 'follow-up' */

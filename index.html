@@ -8,6 +8,20 @@
     <meta name="theme-color" content="#0E1422" media="(prefers-color-scheme: dark)" />
     <meta name="description" content="A private English vocabulary and writing notebook." />
     <title>WordCraft Academy</title>
+    <script>
+      // Apply the saved theme before the page appears, so dark mode does not
+      // flash white first. Same steps as src/store/displaySettings.ts.
+      try {
+        var saved = JSON.parse(localStorage.getItem('wordcraft')).state
+        var p = saved.profiles.find(function (x) { return x.id === saved.activeProfileId })
+        var root = document.documentElement
+        if (p.theme !== 'device') root.dataset.theme = p.theme
+        if (p.ageGroup === 'kids') root.dataset.age = 'kids'
+        if (p.textSize === 'large') root.dataset.text = 'large'
+      } catch (e) {
+        // No saved profile yet: keep the defaults
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

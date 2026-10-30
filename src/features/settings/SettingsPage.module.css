@@ -1,0 +1,121 @@
+.page {
+  max-width: 44rem;
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-8);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.section {
+  display: grid;
+  gap: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.heading {
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.heading:focus {
+  outline: none;
+}
+
+.text {
+  max-width: 62ch;
+}
+
+.note {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+/* Name */
+.nameForm {
+  max-width: 30rem;
+}
+
+.nameRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.nameRow .input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Profile list */
+.profileList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.profileRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-4);
+}
+
+.profileRow + .profileRow {
+  border-top: 1px solid var(--line);
+}
+
+.profileInfo {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.profileName {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.current {
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  font-weight: 400;
+}
+
+.profileMeta {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.confirm {
+  display: grid;
+  gap: var(--space-3);
+  flex-basis: 100%;
+}
+
+.confirmText {
+  color: var(--error);
+}

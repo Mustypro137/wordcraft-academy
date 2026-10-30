@@ -1,27 +1,53 @@
-import { createBrowserRouter, RouterProvider } from 'react-router'
+import type { ReactElement } from 'react'
+import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router'
 import { AppShell } from './components/AppShell/AppShell'
 import { sections } from './components/AppShell/sections'
 import { MorePage } from './features/more/MorePage'
+import { CreateProfile } from './features/onboarding/CreateProfile'
 import { NotFoundPage } from './features/placeholder/NotFoundPage'
 import { PlaceholderPage } from './features/placeholder/PlaceholderPage'
+import { SettingsPage } from './features/settings/SettingsPage'
+import { useDisplaySettings } from './store/displaySettings'
+import { useActiveProfile } from './store/learnerStore'
+
+// Sections that are built. Every other section still shows its placeholder.
+const builtPages: Record<string, ReactElement> = {
+  '/settings': <SettingsPage />,
+}
+
+function NewProfilePage() {
+  const navigate = useNavigate()
+  return <CreateProfile onFinished={() => navigate('/')} onCancel={() => navigate(-1)} />
+}
 
 // Routes: each web address shows one page inside the app shell.
-// Until a section is built, its address shows a placeholder page.
 const router = createBrowserRouter([
   {
     element: <AppShell />,
     children: [
       ...sections.map((section) => ({
         path: section.path,
-        element: <PlaceholderPage section={section} />,
+        element: builtPages[section.path] ?? <PlaceholderPage section={section} />,
       })),
       { path: '/more', element: <MorePage /> },
+      { path: '/profiles/new', element: <NewProfilePage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
 ])
 
 function App() {
+  const profile = useActiveProfile()
+  useDisplaySettings(profile)
+
+  // No profile yet (first visit, or the last one was deleted): welcome screens
+  if (!profile) {
+    return (
+      <main id="main" className="welcome-page">
+        <CreateProfile firstVisit onFinished={() => router.navigate('/')} />
+      </main>
+    )
+  }
   return <RouterProvider router={router} />
 }
 

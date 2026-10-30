@@ -156,3 +156,12 @@
   --radius-sm: 12px;
   --mark-top: 0.05em;
 }
+
+/* Large text (Settings) */
+:root[data-text="large"] {
+  --text-base: 1.125rem;
+}
+
+:root[data-age="kids"][data-text="large"] {
+  --text-base: 1.3125rem;
+}

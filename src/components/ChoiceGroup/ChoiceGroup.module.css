@@ -1,0 +1,103 @@
+.group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: var(--space-2);
+  font-weight: 700;
+}
+
+.option {
+  position: relative;
+  display: flex;
+  gap: var(--space-3);
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .option:hover {
+    border-color: var(--ink-soft);
+  }
+}
+
+.option:has(.input:checked) {
+  border-color: var(--ink);
+  background: var(--surface-2);
+}
+
+.option:has(.input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.input {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0.2em 0 0;
+  accent-color: var(--ink);
+}
+
+.input:focus-visible {
+  outline: none;
+}
+
+.text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  font-weight: 700;
+}
+
+.description {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+/* Cards: one option per row, room for a description */
+.cards .options {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.cards .option {
+  padding: var(--space-4);
+  border-radius: var(--radius);
+}
+
+/* Inline: a compact row of options that wraps on small screens */
+.inline .options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.inline .option {
+  align-items: center;
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+.inline .input {
+  margin: 0;
+}
+
+.inline .label {
+  font-weight: 400;
+}
+
+.inline .option:has(.input:checked) .label {
+  font-weight: 700;
+}

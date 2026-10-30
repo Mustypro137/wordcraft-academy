@@ -1,0 +1,62 @@
+.page {
+  max-width: 34rem;
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-8);
+}
+
+.welcome {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--line);
+}
+
+.welcome img {
+  flex: none;
+  display: block;
+  border-radius: 9px;
+}
+
+.welcomeTitle {
+  font-weight: 700;
+  font-size: var(--text-md);
+}
+
+.welcomeText {
+  color: var(--ink-soft);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.title:focus {
+  outline: none;
+}
+
+.note {
+  color: var(--ink-soft);
+  margin-bottom: calc(-1 * var(--space-3));
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.progress {
+  margin-left: auto;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}

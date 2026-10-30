@@ -60,6 +60,102 @@ a {
   border-radius: 4px;
 }
 
+/* Buttons: <button class="btn">, plus btn-secondary or btn-danger */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--action);
+  border-radius: var(--radius);
+  background: var(--action);
+  color: var(--action-fg);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.btn-danger {
+  border-color: var(--error);
+  background: var(--surface);
+  color: var(--error);
+}
+
+@media (hover: hover) {
+  .btn:not(:disabled):hover {
+    opacity: 0.9;
+  }
+
+  .btn-secondary:not(:disabled):hover,
+  .btn-danger:not(:disabled):hover {
+    opacity: 1;
+    background: var(--surface-2);
+  }
+}
+
+/* Text fields */
+.field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.field-label {
+  font-weight: 700;
+}
+
+.field-hint {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.field-error {
+  color: var(--error);
+  font-size: var(--text-sm);
+}
+
+.input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--ink-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  /* 16px or more stops phones from zooming in when the field is tapped */
+  font-size: max(1rem, var(--text-base));
+}
+
+.input:focus-visible {
+  outline-offset: 0;
+  border-color: var(--focus);
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+/* First visit: the welcome screens, shown without the navigation */
+.welcome-page {
+  padding: var(--space-12) max(var(--page-gutter), env(safe-area-inset-left, 0px));
+}
+
 /* Hidden on screen, still read aloud by screen readers */
 .visually-hidden {
   position: absolute;

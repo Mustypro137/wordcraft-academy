@@ -131,6 +131,57 @@
   display: none;
 }
 
+/* Current profile, at the bottom of the sidebar */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--shell-fg);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.profile:hover {
+  background: var(--shell-active);
+}
+
+.profile:focus-visible {
+  outline-color: var(--shell-strong);
+}
+
+.avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--shell-active);
+  color: var(--shell-strong);
+  font-weight: 700;
+}
+
+.profileName,
+.profileAction {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profileName {
+  color: var(--shell-strong);
+  font-weight: 700;
+}
+
+.profileAction {
+  color: var(--shell-soft);
+  font-size: var(--text-sm);
+}
+
 /* Tablet: icon rail with short labels under each icon */
 @media (min-width: 640px) {
   .shell {
@@ -193,6 +244,10 @@
     display: block;
   }
 
+  .profile {
+    justify-content: center;
+  }
+
   .main {
     padding-block: var(--space-8) var(--space-12);
   }
@@ -251,6 +306,14 @@
 
   .shortLabel {
     display: none;
+  }
+
+  .profile {
+    justify-content: flex-start;
+  }
+
+  .longLabel:has(.profileName) {
+    min-width: 0;
   }
 
   .main {

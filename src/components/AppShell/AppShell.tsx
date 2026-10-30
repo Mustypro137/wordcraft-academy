@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router'
+import { useActiveProfile } from '../../store/learnerStore'
 import { Icon } from '../Icon'
 import { phoneTabs, sections, type Section } from './sections'
 import styles from './AppShell.module.css'
@@ -36,6 +37,7 @@ function SideLink({ section }: { section: Section }) {
 
 export function AppShell() {
   const { pathname } = useLocation()
+  const profile = useActiveProfile()
   const mainRef = useRef<HTMLElement>(null)
   const isFirstRender = useRef(true)
 
@@ -86,6 +88,18 @@ export function AppShell() {
             </li>
           ))}
         </ul>
+
+        {profile && (
+          <Link to="/settings" className={styles.profile}>
+            <span className={styles.avatar} aria-hidden="true">
+              {profile.name.charAt(0).toUpperCase()}
+            </span>
+            <span className={styles.longLabel}>
+              <span className={styles.profileName}>{profile.name}</span>
+              <span className={styles.profileAction}>Switch profile</span>
+            </span>
+          </Link>
+        )}
       </nav>
 
       <main id="main" ref={mainRef} tabIndex={-1} className={styles.main}>
