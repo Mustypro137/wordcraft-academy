@@ -19,6 +19,7 @@ Approved by the owner on 2026-10-30 after planning Stages 1–5. Product truth l
 - **Mastered** is earned only through Review: correct recall without hints on 3 different days, first and last at least 7 days apart. A wrong answer returns the word to Learning.
 - **Spaced repetition (Leitner):** boxes 0–5 wait 0, 1, 3, 7, 14, 30 days. Correct → up one box; wrong → box 1; "Guessed" → same box.
 - **Streak:** one missed day per week does not break it. Days use the learner's local date.
+- **Daily goal** (5 / 10 / 20, default 10): each Review answer and each first-time save counts as one word practised. A day with at least one counts for the streak.
 - **Pronunciation:** simple respelling + IPA; 🔊 uses the browser's built-in speech.
 
 ## Design: "The Annotated Notebook"
@@ -52,7 +53,7 @@ Folders are created in the step that first puts a file in them (Git does not sav
 | Phase | Steps |
 |---|---|
 | 0 · Setup | 1. Project + Git ✅ · 2. Design tokens + app shell ✅ · 3. Deploy to Vercel ✅ |
-| 1 · Core loop | 4. First 50 words ✅ · 5. Profiles + saved data ✅ · 6. Explore + word page ✅ · 7. Knowledge buttons + My Words ✅ · 8. Review ✅ · 9. Today dashboard |
+| 1 · Core loop | 4. First 50 words ✅ · 5. Profiles + saved data ✅ · 6. Explore + word page ✅ · 7. Knowledge buttons + My Words ✅ · 8. Review ✅ · 9. Today dashboard ✅ |
 | Checkpoint | Owner uses the app for a few days; fix what feels wrong |
 | 2 · Finish MVP | 10. Sentence Builder · 11. Writing Studio · 12. Developer English · 13. Backup export/import · 14. Grow to 150–200 words · 15. Quality check → MVP release |
 | 3–4 · Later | Communication Academy, challenges, offline mode, optional AI, cross-device sync |

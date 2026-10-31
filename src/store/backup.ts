@@ -1,6 +1,7 @@
+import type { Activity } from '../logic/activity'
 import { localDate } from '../logic/dates'
 import type { WordStates } from '../logic/wordStates'
-import type { ProfilesState } from './profiles'
+import { DEFAULT_DAILY_GOAL, type ProfilesState } from './profiles'
 
 // The shape of the saved data, how to update data saved by older versions,
 // and the backup file. Step 13 adds importing a backup; it will use the same migrations.
@@ -9,6 +10,8 @@ import type { ProfilesState } from './profiles'
 export interface SavedData extends ProfilesState {
   /** Profile id → that profile's word states */
   wordStates: Record<string, WordStates>
+  /** Profile id → words practised on each day */
+  activity: Record<string, Activity>
 }
 
 /**
@@ -17,8 +20,9 @@ export interface SavedData extends ProfilesState {
  *
  * 1: profiles (Step 5)
  * 2: + word states for each profile (Step 7)
+ * 3: + daily goal for each profile, + activity per day (Step 9)
  */
-export const SCHEMA_VERSION = 2
+export const SCHEMA_VERSION = 3
 
 /**
  * Converts data saved by an older version to the current shape, one version at a time,
@@ -28,6 +32,14 @@ export function migrate(saved: unknown, version: number): SavedData {
   let data = saved as SavedData
   // Version 1 had no word states yet
   if (version < 2) data = { ...data, wordStates: {} }
+  // Version 2 had no daily goal and no activity. Earlier days can't be known, so they start empty.
+  if (version < 3) {
+    data = {
+      ...data,
+      profiles: data.profiles.map((p) => ({ ...p, dailyGoal: DEFAULT_DAILY_GOAL })),
+      activity: {},
+    }
+  }
   return data
 }
 
@@ -40,12 +52,12 @@ export interface BackupFile {
 }
 
 export function createBackup(data: SavedData, now: Date): BackupFile {
-  const { profiles, activeProfileId, wordStates } = data
+  const { profiles, activeProfileId, wordStates, activity } = data
   return {
     app: 'wordcraft-academy',
     schemaVersion: SCHEMA_VERSION,
     exportedAt: now.toISOString(),
-    data: { profiles, activeProfileId, wordStates },
+    data: { profiles, activeProfileId, wordStates, activity },
   }
 }
 

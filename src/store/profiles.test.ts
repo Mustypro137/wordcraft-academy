@@ -45,6 +45,7 @@ describe('addProfile', () => {
         level: 'professional',
         theme: 'device',
         textSize: 'normal',
+        dailyGoal: 10,
         createdAt: NOW,
       },
     ])

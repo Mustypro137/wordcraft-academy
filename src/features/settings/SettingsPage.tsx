@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { ChoiceGroup } from '../../components/ChoiceGroup/ChoiceGroup'
 import {
   ageGroupOptions,
+  dailyGoalOptions,
   labelOf,
   levelOptions,
   textSizeOptions,
@@ -11,7 +12,7 @@ import {
 import { backupFileName, createBackup, protectStorage } from '../../store/backup'
 import { useActiveProfile, useLearnerStore } from '../../store/learnerStore'
 import { cleanName, isValidName, MAX_NAME_LENGTH } from '../../store/profiles'
-import type { Profile } from '../../types'
+import type { DailyGoal, Profile } from '../../types'
 import styles from './SettingsPage.module.css'
 
 export function SettingsPage() {
@@ -47,6 +48,16 @@ export function SettingsPage() {
           value={profile.level}
           onChange={(level) => update({ level })}
         />
+        <ChoiceGroup
+          legend="Daily goal"
+          layout="inline"
+          options={dailyGoalOptions}
+          value={`${profile.dailyGoal}`}
+          onChange={(goal) => update({ dailyGoal: Number(goal) as DailyGoal })}
+        />
+        <p className={styles.note}>
+          Every review answer counts as one word, and so does every word you save for the first time.
+        </p>
       </section>
 
       <section className={styles.section} aria-labelledby="settings-display">

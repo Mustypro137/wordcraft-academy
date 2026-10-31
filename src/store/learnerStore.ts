@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { addActivity, type Activity } from '../logic/activity'
+import { localDate } from '../logic/dates'
 import type { AnswerResult } from '../logic/spacedRepetition'
 import { applyAnswer, applyKnowledge, restoreWord, type KnowledgeAction, type WordStates } from '../logic/wordStates'
 import type { WordState } from '../types'
@@ -31,6 +33,11 @@ interface LearnerStore extends SavedData {
   restoreWord: (wordId: string, previous: WordState | undefined) => void
 }
 
+/** The store change that adds `amount` practised words to today, for one profile */
+function countPractice(s: SavedData, profileId: string, now: Date, amount: number) {
+  return { activity: { ...s.activity, [profileId]: addActivity(s.activity[profileId] ?? {}, localDate(now), amount) } }
+}
+
 /** The localStorage key. index.html reads it too, to apply the theme early. */
 export const STORAGE_KEY = 'wordcraft'
 
@@ -40,6 +47,7 @@ export const useLearnerStore = create<LearnerStore>()(
       profiles: [],
       activeProfileId: null,
       wordStates: {},
+      activity: {},
       addProfile: (input) => set((s) => addProfile(s, input, crypto.randomUUID(), new Date().toISOString())),
       updateProfile: (id, changes) => set((s) => updateProfile(s, id, changes)),
       switchProfile: (id) => set((s) => switchProfile(s, id)),
@@ -47,30 +55,43 @@ export const useLearnerStore = create<LearnerStore>()(
       removeProfile: (id) =>
         set((s) => {
           const wordStates = { ...s.wordStates }
+          const activity = { ...s.activity }
           delete wordStates[id]
-          return { ...removeProfile(s, id), wordStates }
+          delete activity[id]
+          return { ...removeProfile(s, id), wordStates, activity }
         }),
+      // Saving a word for the first time counts as one word practised today
       setKnowledge: (wordId, action) =>
         set((s) => {
           const id = s.activeProfileId
           if (!id) return s
+          const now = new Date()
+          const words = s.wordStates[id] ?? {}
           return {
-            wordStates: { ...s.wordStates, [id]: applyKnowledge(s.wordStates[id] ?? {}, wordId, action, new Date()) },
+            wordStates: { ...s.wordStates, [id]: applyKnowledge(words, wordId, action, now) },
+            ...(words[wordId] ? {} : countPractice(s, id, now, 1)),
           }
         }),
+      // Every Review answer counts as one word practised today
       answerReview: (wordId, result, typed) =>
         set((s) => {
           const id = s.activeProfileId
           if (!id) return s
+          const now = new Date()
           return {
-            wordStates: { ...s.wordStates, [id]: applyAnswer(s.wordStates[id] ?? {}, wordId, result, typed, new Date()) },
+            wordStates: { ...s.wordStates, [id]: applyAnswer(s.wordStates[id] ?? {}, wordId, result, typed, now) },
+            ...countPractice(s, id, now, 1),
           }
         }),
+      // Undoing a first save takes back the word it counted
       restoreWord: (wordId, previous) =>
         set((s) => {
           const id = s.activeProfileId
           if (!id) return s
-          return { wordStates: { ...s.wordStates, [id]: restoreWord(s.wordStates[id] ?? {}, wordId, previous) } }
+          return {
+            wordStates: { ...s.wordStates, [id]: restoreWord(s.wordStates[id] ?? {}, wordId, previous) },
+            ...(previous ? {} : countPractice(s, id, new Date(), -1)),
+          }
         }),
     }),
     {
@@ -83,6 +104,7 @@ export const useLearnerStore = create<LearnerStore>()(
         profiles: s.profiles,
         activeProfileId: s.activeProfileId,
         wordStates: s.wordStates,
+        activity: s.activity,
       }),
     },
   ),
@@ -94,6 +116,13 @@ export function useActiveProfile() {
 
 // One shared empty object, so a profile with no words doesn't cause a new render every time
 const NO_WORDS: WordStates = {}
+
+const NO_ACTIVITY: Activity = {}
+
+/** The active profile's words practised per day */
+export function useActivity() {
+  return useLearnerStore((s) => (s.activeProfileId && s.activity[s.activeProfileId]) || NO_ACTIVITY)
+}
 
 /** The active profile's word states */
 export function useWordStates() {

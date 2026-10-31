@@ -8,6 +8,12 @@ export function localDate(date: Date) {
   return `${date.getFullYear()}-${month}-${day}`
 }
 
+/** '2026-11-03' as "Tuesday 3 November" */
+export function formatDay(day: string) {
+  const [year, month, date] = day.split('-').map(Number)
+  return new Date(year, month - 1, date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
+}
+
 /** '2026-10-31' plus 3 days is '2026-11-03' */
 export function addDays(day: string, days: number) {
   const [year, month, date] = day.split('-').map(Number)

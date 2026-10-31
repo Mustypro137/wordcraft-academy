@@ -34,6 +34,8 @@ export type Theme = 'device' | 'light' | 'dark'
 
 export type TextSize = 'normal' | 'large'
 
+export type DailyGoal = 5 | 10 | 20
+
 /** One person who learns on this device. There are no passwords. */
 export interface Profile {
   id: string
@@ -42,6 +44,8 @@ export interface Profile {
   level: LearningLevel
   theme: Theme
   textSize: TextSize
+  /** Words to practise each day */
+  dailyGoal: DailyGoal
   /** When the profile was created, as an ISO date string */
   createdAt: string
 }

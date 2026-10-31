@@ -15,6 +15,8 @@ export type ProfileChanges = Partial<Omit<Profile, 'id' | 'createdAt'>>
 
 export const MAX_NAME_LENGTH = 30
 
+export const DEFAULT_DAILY_GOAL = 10
+
 /** Removes extra spaces: '  Musa   A. ' becomes 'Musa A.' */
 export function cleanName(name: string) {
   return name.trim().replace(/\s+/g, ' ')
@@ -35,6 +37,7 @@ export function addProfile(state: ProfilesState, input: NewProfile, id: string, 
     level: input.level,
     theme: 'device',
     textSize: 'normal',
+    dailyGoal: DEFAULT_DAILY_GOAL,
     createdAt: now,
   }
   return { profiles: [...state.profiles, profile], activeProfileId: id }

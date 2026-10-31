@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { Highlight } from '../../components/Highlight/Highlight'
 import { wordsFor } from '../../data/words'
-import { localDate } from '../../logic/dates'
+import { formatDay, localDate } from '../../logic/dates'
 import { nextReviewDay, pickReviewItems, type ReviewItem } from '../../logic/reviewSession'
 import type { AnswerResult } from '../../logic/spacedRepetition'
 import { useActiveProfile, useLearnerStore, useWordStates } from '../../store/learnerStore'
@@ -13,12 +13,6 @@ interface Session {
   items: ReviewItem[]
   /** How each answered question went, in order */
   results: AnswerResult[]
-}
-
-/** '2026-11-03' as "Tuesday 3 November" */
-function formatDay(day: string) {
-  const [year, month, date] = day.split('-').map(Number)
-  return new Date(year, month - 1, date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
 // Review has three screens: start → one question at a time → summary.

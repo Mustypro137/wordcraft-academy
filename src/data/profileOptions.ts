@@ -1,4 +1,4 @@
-import type { AgeGroup, LearningLevel, TextSize, Theme } from '../types'
+import type { AgeGroup, DailyGoal, LearningLevel, TextSize, Theme } from '../types'
 
 // The choices a learner can make for their profile, with plain descriptions.
 // Used by the welcome screens and by Settings.
@@ -35,6 +35,13 @@ export const themeOptions: Option<Theme>[] = [
 export const textSizeOptions: Option<TextSize>[] = [
   { value: 'normal', label: 'Normal' },
   { value: 'large', label: 'Large' },
+]
+
+/** Choice groups work with text values, so the goal is written as text here: '10' */
+export const dailyGoalOptions: Option<`${DailyGoal}`>[] = [
+  { value: '5', label: '5 words', description: 'A few minutes. Good for busy days.' },
+  { value: '10', label: '10 words', description: 'About 10 minutes a day.' },
+  { value: '20', label: '20 words', description: 'For a big push.' },
 ]
 
 export function labelOf<T extends string>(options: Option<T>[], value: T) {

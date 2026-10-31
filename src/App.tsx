@@ -10,6 +10,7 @@ import { NotFoundPage } from './features/placeholder/NotFoundPage'
 import { PlaceholderPage } from './features/placeholder/PlaceholderPage'
 import { ReviewPage } from './features/review/ReviewPage'
 import { SettingsPage } from './features/settings/SettingsPage'
+import { TodayPage } from './features/today/TodayPage'
 import { MyWordsPage } from './features/words/MyWordsPage'
 import { protectStorage } from './store/backup'
 import { useDisplaySettings } from './store/displaySettings'
@@ -17,6 +18,7 @@ import { useActiveProfile } from './store/learnerStore'
 
 // Sections that are built. Every other section still shows its placeholder.
 const builtPages: Record<string, ReactElement> = {
+  '/': <TodayPage />,
   '/explore': <ExplorePage />,
   '/review': <ReviewPage />,
   '/settings': <SettingsPage />,
