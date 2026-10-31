@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { applyKnowledge, restoreWord, type KnowledgeAction, type WordStates } from '../logic/wordStates'
+import type { AnswerResult } from '../logic/spacedRepetition'
+import { applyAnswer, applyKnowledge, restoreWord, type KnowledgeAction, type WordStates } from '../logic/wordStates'
 import type { WordState } from '../types'
 import { migrate, SCHEMA_VERSION, type SavedData } from './backup'
 import {
@@ -24,6 +25,8 @@ interface LearnerStore extends SavedData {
   removeProfile: (id: string) => void
   /** A knowledge button, for the active profile */
   setKnowledge: (wordId: string, action: KnowledgeAction) => void
+  /** One Review answer, for the active profile. `typed` = typed without help (counts towards Mastered). */
+  answerReview: (wordId: string, result: AnswerResult, typed: boolean) => void
   /** Undo: puts a word back the way it was, for the active profile */
   restoreWord: (wordId: string, previous: WordState | undefined) => void
 }
@@ -53,6 +56,14 @@ export const useLearnerStore = create<LearnerStore>()(
           if (!id) return s
           return {
             wordStates: { ...s.wordStates, [id]: applyKnowledge(s.wordStates[id] ?? {}, wordId, action, new Date()) },
+          }
+        }),
+      answerReview: (wordId, result, typed) =>
+        set((s) => {
+          const id = s.activeProfileId
+          if (!id) return s
+          return {
+            wordStates: { ...s.wordStates, [id]: applyAnswer(s.wordStates[id] ?? {}, wordId, result, typed, new Date()) },
           }
         }),
       restoreWord: (wordId, previous) =>

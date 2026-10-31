@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { WordState } from '../types'
 import { localDate } from './dates'
-import { actionFor, applyKnowledge, countByCollection, restoreWord, wordsIn, type WordStates } from './wordStates'
+import { actionFor, applyAnswer, applyKnowledge, countByCollection, restoreWord, wordsIn, type WordStates } from './wordStates'
 
 // Local times (no "Z"), so the dates are the same in every time zone
 const DAY_1 = new Date(2026, 9, 31, 9, 0)
@@ -82,6 +82,63 @@ describe('restoreWord (Undo)', () => {
   it('takes a word out of My Words if it was not saved before', () => {
     const after = applyKnowledge({ goal: mastered().improve }, 'improve', 'dontKnow', DAY_1)
     expect(restoreWord(after, 'improve', undefined)).toEqual({ goal: mastered().improve })
+  })
+})
+
+describe('applyAnswer (Review)', () => {
+  const learning = (correctDays: string[] = []): WordStates => ({
+    improve: { collection: 'learning', box: 2, due: '2026-11-04', correctDays, changedAt: DAY_1.toISOString() },
+  })
+
+  it('correct: up a box, and an Unfamiliar word moves to Learning', () => {
+    const states = applyKnowledge({}, 'improve', 'dontKnow', DAY_1)
+    expect(applyAnswer(states, 'improve', 'correct', false, DAY_1).improve).toMatchObject({
+      collection: 'learning',
+      box: 1,
+      due: '2026-11-01',
+      correctDays: [],
+    })
+  })
+
+  it('only typed answers count towards Mastered', () => {
+    expect(applyAnswer(learning(), 'improve', 'correct', true, DAY_5).improve.correctDays).toEqual(['2026-11-04'])
+    expect(applyAnswer(learning(), 'improve', 'correct', false, DAY_5).improve.correctDays).toEqual([])
+  })
+
+  it('the third typed day, a week after the first, gives Mastered', () => {
+    const states = learning(['2026-10-24', '2026-10-28'])
+    expect(applyAnswer(states, 'improve', 'correct', true, DAY_1).improve.collection).toBe('mastered')
+  })
+
+  it('three days within a week are not enough yet', () => {
+    const states = learning(['2026-10-27', '2026-10-29'])
+    expect(applyAnswer(states, 'improve', 'correct', true, DAY_1).improve.collection).toBe('learning')
+  })
+
+  it('wrong: back to Learning and box 1, and mastery starts again', () => {
+    expect(applyAnswer(mastered(), 'improve', 'wrong', true, DAY_5).improve).toMatchObject({
+      collection: 'learning',
+      box: 1,
+      due: '2026-11-05',
+      correctDays: [],
+      changedAt: DAY_5.toISOString(),
+    })
+  })
+
+  it('guessed: same box and collection, mastery progress kept', () => {
+    const states = learning(['2026-10-25'])
+    expect(applyAnswer(states, 'improve', 'guessed', true, DAY_5).improve).toMatchObject({
+      collection: 'learning',
+      box: 2,
+      due: '2026-11-07',
+      correctDays: ['2026-10-25'],
+      changedAt: DAY_1.toISOString(),
+    })
+  })
+
+  it('ignores a word that is not saved', () => {
+    const states = learning()
+    expect(applyAnswer(states, 'goal', 'correct', true, DAY_5)).toBe(states)
   })
 })
 

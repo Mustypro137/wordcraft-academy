@@ -52,7 +52,7 @@ Folders are created in the step that first puts a file in them (Git does not sav
 | Phase | Steps |
 |---|---|
 | 0 · Setup | 1. Project + Git ✅ · 2. Design tokens + app shell ✅ · 3. Deploy to Vercel ✅ |
-| 1 · Core loop | 4. First 50 words ✅ · 5. Profiles + saved data ✅ · 6. Explore + word page ✅ · 7. Knowledge buttons + My Words ✅ · 8. Review · 9. Today dashboard |
+| 1 · Core loop | 4. First 50 words ✅ · 5. Profiles + saved data ✅ · 6. Explore + word page ✅ · 7. Knowledge buttons + My Words ✅ · 8. Review ✅ · 9. Today dashboard |
 | Checkpoint | Owner uses the app for a few days; fix what feels wrong |
 | 2 · Finish MVP | 10. Sentence Builder · 11. Writing Studio · 12. Developer English · 13. Backup export/import · 14. Grow to 150–200 words · 15. Quality check → MVP release |
 | 3–4 · Later | Communication Academy, challenges, offline mode, optional AI, cross-device sync |

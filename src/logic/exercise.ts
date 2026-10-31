@@ -13,6 +13,17 @@ export function splitBlank(sentence: string): [string, string] {
   return [before, after]
 }
 
+/**
+ * The parts of a fill-in-the-blank sentence, and the answer as it looks inside it.
+ * At the start of a sentence the answer needs a capital: "Thanks! By the way, …"
+ */
+export function fillBlank(sentence: string, answer: string) {
+  const [before, after] = splitBlank(sentence)
+  const startsSentence = /(^|[.!?])\s*$/.test(before)
+  const filled = startsSentence ? answer.charAt(0).toUpperCase() + answer.slice(1) : answer
+  return { before, after, filled }
+}
+
 export interface TextPart {
   text: string
   isWord: boolean

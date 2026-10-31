@@ -1,5 +1,7 @@
 import type { Collection, WordState } from '../types'
 import { localDate } from './dates'
+import { addCorrectDay, hasMastered } from './mastery'
+import { nextSchedule, type AnswerResult } from './spacedRepetition'
 
 // The rules for the knowledge buttons, as plain functions (like store/profiles.ts).
 // Each one takes the current word states and returns new ones; it never changes the old ones.
@@ -43,6 +45,45 @@ export function applyKnowledge(states: WordStates, wordId: string, action: Knowl
     due: action === 'practise' || !old ? today : old.due,
     correctDays: old && !leavesMastered ? old.correctDays : [],
     changedAt: now.toISOString(),
+  }
+  return { ...states, [wordId]: state }
+}
+
+/**
+ * Applies one Review answer to a saved word.
+ * - The box and review date follow spacedRepetition.ts.
+ * - Correct: an Unfamiliar word moves to Learning. A typed answer counts towards Mastered.
+ * - Wrong: the word goes to Learning (even from Known or Mastered) and mastery starts again.
+ * - Guessed: only the review date changes.
+ * `typed` is true for answers typed without help; picking from a list never counts towards Mastered.
+ */
+export function applyAnswer(
+  states: WordStates,
+  wordId: string,
+  result: AnswerResult,
+  typed: boolean,
+  now: Date,
+): WordStates {
+  const old = states[wordId]
+  if (!old) return states
+
+  const today = localDate(now)
+  let { collection, correctDays } = old
+  if (result === 'correct') {
+    if (typed) correctDays = addCorrectDay(correctDays, today)
+    if (hasMastered(correctDays)) collection = 'mastered'
+    else if (collection === 'unfamiliar') collection = 'learning'
+  } else if (result === 'wrong') {
+    collection = 'learning'
+    correctDays = []
+  }
+
+  const state: WordState = {
+    ...nextSchedule(old.box, result, today),
+    collection,
+    correctDays,
+    // My Words lists recent moves first, so only a move counts as a change
+    changedAt: collection === old.collection ? old.changedAt : now.toISOString(),
   }
   return { ...states, [wordId]: state }
 }

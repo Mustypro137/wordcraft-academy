@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { checkAnswer, splitBlank } from '../../logic/exercise'
+import { checkAnswer, fillBlank } from '../../logic/exercise'
 import type { Word } from '../../types'
 import styles from './WordPage.module.css'
 
@@ -9,10 +9,7 @@ type Result = 'none' | 'correct' | 'wrong'
 // (This practice does not count towards mastery. Review does, from Step 8.)
 export function WordExercise({ word }: { word: Word }) {
   const { sentence, answer, hint } = word.exercise
-  const [before, after] = splitBlank(sentence)
-  // At the start of a sentence the answer needs a capital: "Thanks! By the way, …"
-  const startsSentence = /(^|[.!?])\s*$/.test(before)
-  const filled = startsSentence ? answer.charAt(0).toUpperCase() + answer.slice(1) : answer
+  const { before, after, filled } = fillBlank(sentence, answer)
   const [input, setInput] = useState('')
   const [result, setResult] = useState<Result>('none')
   const [showHint, setShowHint] = useState(false)

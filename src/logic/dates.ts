@@ -7,3 +7,19 @@ export function localDate(date: Date) {
   const day = String(date.getDate()).padStart(2, '0')
   return `${date.getFullYear()}-${month}-${day}`
 }
+
+/** '2026-10-31' plus 3 days is '2026-11-03' */
+export function addDays(day: string, days: number) {
+  const [year, month, date] = day.split('-').map(Number)
+  return localDate(new Date(year, month - 1, date + days))
+}
+
+/** Whole days from one date to a later one: '2026-10-31' to '2026-11-03' is 3 */
+export function daysBetween(from: string, to: string) {
+  // UTC has no summer time, so every day is exactly 24 hours long
+  const toUtc = (day: string) => {
+    const [year, month, date] = day.split('-').map(Number)
+    return Date.UTC(year, month - 1, date)
+  }
+  return Math.round((toUtc(to) - toUtc(from)) / 86_400_000)
+}

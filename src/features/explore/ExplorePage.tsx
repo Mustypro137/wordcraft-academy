@@ -5,7 +5,7 @@ import { categories } from '../../data/categories'
 import { collections } from '../../data/collections'
 import { levelLabel, wordLevelsFor } from '../../data/levels'
 import { levelOptions } from '../../data/profileOptions'
-import { words } from '../../data/words'
+import { words, wordsFor } from '../../data/words'
 import { searchWords } from '../../logic/wordSearch'
 import { useActiveProfile, useWordStates } from '../../store/learnerStore'
 import type { CategoryId, Collection, LearningLevel } from '../../types'
@@ -45,7 +45,7 @@ export function ExplorePage() {
   }
 
   const isKids = profile?.ageGroup === 'kids'
-  const available = isKids ? words.filter((w) => w.forKids) : words
+  const available = wordsFor(profile)
   const results = searchWords(available, query).filter(
     (w) =>
       (!level || wordLevelsFor[level].includes(w.level)) &&
