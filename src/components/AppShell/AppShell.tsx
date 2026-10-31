@@ -23,7 +23,8 @@ function SideLink({ section }: { section: Section }) {
   return (
     <NavLink
       to={section.path}
-      end
+      // Explore stays highlighted on /explore/improve; Today only on "/"
+      end={section.path === '/'}
       className={({ isActive }) => (isActive ? `${styles.sideLink} ${styles.current}` : styles.sideLink)}
     >
       <Icon name={section.icon} className={styles.sideIcon} />
@@ -110,7 +111,9 @@ export function AppShell() {
       <nav className={styles.tabs} aria-label="Main">
         <ul className={styles.tabList}>
           {phoneTabs.map((tab) => {
-            const isCurrent = tab.covers.includes(pathname)
+            const isCurrent = tab.covers.some((path) =>
+              path === '/' ? pathname === '/' : pathname === path || pathname.startsWith(`${path}/`),
+            )
             return (
               <li key={tab.path}>
                 <Link

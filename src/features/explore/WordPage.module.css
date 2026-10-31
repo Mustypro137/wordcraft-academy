@@ -1,0 +1,271 @@
+.page {
+  max-width: 42rem;
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-8);
+}
+
+.back {
+  justify-self: start;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* Header: the word is the hero of the page */
+.header {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: calc(-1 * var(--space-4));
+}
+
+.headword {
+  font-family: var(--font-word);
+  font-size: clamp(2.25rem, 1.6rem + 3vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  color: var(--ink-soft);
+}
+
+.say {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.pronunciation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+}
+
+.respelling {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.ipa {
+  font-family: var(--font-word);
+  color: var(--ink-soft);
+}
+
+.listen {
+  min-height: 2.5rem;
+  padding-block: var(--space-1);
+}
+
+.definition {
+  font-size: var(--text-lg);
+  line-height: 1.45;
+  max-width: 34ch;
+  text-wrap: pretty;
+}
+
+/* Sections */
+.section {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.heading {
+  font-size: var(--text-base);
+  font-weight: 700;
+}
+
+.examples {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.examples li {
+  font-family: var(--font-word);
+  font-size: var(--text-md);
+  line-height: 1.55;
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--line);
+}
+
+.examples strong {
+  font-weight: 700;
+}
+
+.chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-family: var(--font-word);
+}
+
+.chip a {
+  color: var(--ink);
+  text-decoration-thickness: 1px;
+}
+
+.related {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.related div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.related dt {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.related dd {
+  margin: 0;
+}
+
+/* Common mistake */
+.mistake {
+  margin: 0;
+  display: grid;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.mistake div {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-3) var(--space-4);
+}
+
+.mistake div + div {
+  border-top: 1px solid var(--line);
+}
+
+.mistake dt {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.mistake dd {
+  margin: 0;
+  font-family: var(--font-word);
+  font-size: var(--text-md);
+}
+
+.wrong dt,
+.wrong s {
+  color: var(--error);
+}
+
+.wrong s {
+  text-decoration-thickness: 1px;
+}
+
+.right dt {
+  color: var(--ink-soft);
+}
+
+.why {
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+/* Exercise */
+.exercise {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.task {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.sentence {
+  font-family: var(--font-word);
+  font-size: var(--text-md);
+  line-height: 2;
+}
+
+.blank {
+  max-width: 100%;
+  margin: 0 0.15em;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-bottom: 2px solid var(--ink-soft);
+  border-radius: 0;
+  background: var(--surface-2);
+  font-family: var(--font-word);
+  font-size: max(1rem, var(--text-md));
+  line-height: 1.5;
+  text-align: center;
+}
+
+.blank:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.blank[aria-invalid="true"] {
+  border-bottom-color: var(--error);
+}
+
+.blank:read-only {
+  background: transparent;
+}
+
+.feedback:empty {
+  display: none;
+}
+
+.feedback {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.correct strong {
+  margin-right: var(--space-1);
+}
+
+.exerciseActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

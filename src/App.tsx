@@ -2,6 +2,8 @@ import type { ReactElement } from 'react'
 import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router'
 import { AppShell } from './components/AppShell/AppShell'
 import { sections } from './components/AppShell/sections'
+import { ExplorePage } from './features/explore/ExplorePage'
+import { WordPage } from './features/explore/WordPage'
 import { MorePage } from './features/more/MorePage'
 import { CreateProfile } from './features/onboarding/CreateProfile'
 import { NotFoundPage } from './features/placeholder/NotFoundPage'
@@ -12,6 +14,7 @@ import { useActiveProfile } from './store/learnerStore'
 
 // Sections that are built. Every other section still shows its placeholder.
 const builtPages: Record<string, ReactElement> = {
+  '/explore': <ExplorePage />,
   '/settings': <SettingsPage />,
 }
 
@@ -29,6 +32,7 @@ const router = createBrowserRouter([
         path: section.path,
         element: builtPages[section.path] ?? <PlaceholderPage section={section} />,
       })),
+      { path: '/explore/:wordId', element: <WordPage /> },
       { path: '/more', element: <MorePage /> },
       { path: '/profiles/new', element: <NewProfilePage /> },
       { path: '*', element: <NotFoundPage /> },
