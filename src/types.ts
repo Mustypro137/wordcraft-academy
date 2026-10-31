@@ -104,6 +104,47 @@ export interface SentencePattern {
   exercises: SentenceExercise[]
 }
 
+/** A writing task in the Writing Studio */
+export interface WritingSituation {
+  /** Unique, lowercase, words joined by hyphens: 'message-friend' */
+  id: string
+  title: string
+  ages: AgeGroup[]
+  /** What to write, in one or two sentences */
+  task: string
+  /** Sentence starters that fit this task */
+  starters: string[]
+}
+
+/** A common mistake the Writing Studio can find, with a hint, a better version and why */
+export interface WritingRule {
+  /** Phrases to find, lowercase. Matched as whole words, ignoring capitals. */
+  find: string[]
+  /** The natural version */
+  use: string
+  /** A small hint that helps without giving the answer */
+  hint: string
+  /** Why the natural version is better, in simple English */
+  why: string
+}
+
+/** A finished piece of writing, kept in "My writing" */
+export interface WritingPiece {
+  id: string
+  situationId: string
+  text: string
+  /** ISO date string */
+  finishedAt: string
+}
+
+/** One profile's Writing Studio data */
+export interface WritingData {
+  /** Situation id → unfinished text, saved while typing */
+  drafts: Record<string, string>
+  /** Newest first */
+  pieces: WritingPiece[]
+}
+
 /** One vocabulary entry. Every word in src/data/words follows this shape. */
 export interface Word {
   /** Unique, lowercase, words joined by hyphens: 'follow-up' */

@@ -21,7 +21,7 @@ const profiles = v1.profiles.map((p) => ({ ...p, dailyGoal: 10 as const }))
 
 describe('migrate', () => {
   it('upgrades version 1 all the way', () => {
-    expect(migrate(v1, 1)).toEqual({ ...v1, profiles, wordStates: {}, activity: {}, sentenceProgress: {} })
+    expect(migrate(v1, 1)).toEqual({ ...v1, profiles, wordStates: {}, activity: {}, sentenceProgress: {}, writing: {} })
   })
 
   it('keeps version 2 word states and adds a goal of 10 and empty activity', () => {
@@ -30,18 +30,18 @@ describe('migrate', () => {
         improve: { collection: 'learning', box: 1, due: '2026-11-01', correctDays: [], changedAt: '2026-10-31T09:00:00.000Z' },
       },
     }
-    expect(migrate({ ...v1, wordStates }, 2)).toEqual({ ...v1, profiles, wordStates, activity: {}, sentenceProgress: {} })
+    expect(migrate({ ...v1, wordStates }, 2)).toEqual({ ...v1, profiles, wordStates, activity: {}, sentenceProgress: {}, writing: {} })
   })
 
   it('keeps version 3 activity and adds empty Sentence Builder progress', () => {
     const v3 = { ...v1, profiles, wordStates: {}, activity: { p1: { '2026-10-31': 4 } } }
-    expect(migrate(v3, 3)).toEqual({ ...v3, sentenceProgress: {} })
+    expect(migrate(v3, 3)).toEqual({ ...v3, sentenceProgress: {}, writing: {} })
   })
 })
 
 describe('backup file', () => {
   const now = new Date(2026, 9, 31, 22, 15)
-  const data = { ...v1, profiles, wordStates: {}, activity: {}, sentenceProgress: {} }
+  const data = { ...v1, profiles, wordStates: {}, activity: {}, sentenceProgress: {}, writing: {} }
 
   it('holds the saved data, its version and the time', () => {
     expect(createBackup(data, now)).toEqual({
@@ -60,6 +60,7 @@ describe('backup file', () => {
       'wordStates',
       'activity',
       'sentenceProgress',
+      'writing',
     ])
   })
 

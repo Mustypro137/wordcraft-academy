@@ -1,6 +1,7 @@
 import type { Activity } from '../logic/activity'
 import { localDate } from '../logic/dates'
 import type { WordStates } from '../logic/wordStates'
+import type { WritingData } from '../types'
 import { DEFAULT_DAILY_GOAL, type ProfilesState } from './profiles'
 
 // The shape of the saved data, how to update data saved by older versions,
@@ -14,6 +15,8 @@ export interface SavedData extends ProfilesState {
   activity: Record<string, Activity>
   /** Profile id → pattern id → highest Sentence Builder stage completed (1–3) */
   sentenceProgress: Record<string, Record<string, number>>
+  /** Profile id → Writing Studio drafts and finished pieces */
+  writing: Record<string, WritingData>
 }
 
 /**
@@ -24,8 +27,9 @@ export interface SavedData extends ProfilesState {
  * 2: + word states for each profile (Step 7)
  * 3: + daily goal for each profile, + activity per day (Step 9)
  * 4: + Sentence Builder progress (Step 10)
+ * 5: + Writing Studio drafts and finished pieces (Step 11)
  */
-export const SCHEMA_VERSION = 4
+export const SCHEMA_VERSION = 5
 
 /**
  * Converts data saved by an older version to the current shape, one version at a time,
@@ -44,6 +48,7 @@ export function migrate(saved: unknown, version: number): SavedData {
     }
   }
   if (version < 4) data = { ...data, sentenceProgress: {} }
+  if (version < 5) data = { ...data, writing: {} }
   return data
 }
 
@@ -56,12 +61,12 @@ export interface BackupFile {
 }
 
 export function createBackup(data: SavedData, now: Date): BackupFile {
-  const { profiles, activeProfileId, wordStates, activity, sentenceProgress } = data
+  const { profiles, activeProfileId, wordStates, activity, sentenceProgress, writing } = data
   return {
     app: 'wordcraft-academy',
     schemaVersion: SCHEMA_VERSION,
     exportedAt: now.toISOString(),
-    data: { profiles, activeProfileId, wordStates, activity, sentenceProgress },
+    data: { profiles, activeProfileId, wordStates, activity, sentenceProgress, writing },
   }
 }
 

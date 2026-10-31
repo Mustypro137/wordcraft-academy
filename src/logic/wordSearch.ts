@@ -42,14 +42,22 @@ function scoreWord(word: Word, query: string, tokens: string[]): number {
   return 0
 }
 
-/** Returns the matching words, best match first. An empty query returns every word. */
-export function searchWords(words: Word[], rawQuery: string): Word[] {
+/**
+ * The matching words with their scores, best first. 30 or more is a strong match:
+ * the word itself, a synonym, a phrase in its meaning, or every describing word found.
+ */
+export function rankWords(words: Word[], rawQuery: string): { word: Word; score: number }[] {
   const query = normalize(rawQuery)
-  if (query === '') return words
+  if (query === '') return words.map((word) => ({ word, score: 0 }))
   const tokens = query.split(' ').filter((t) => !STOP_WORDS.has(t))
   return words
     .map((word, index) => ({ word, index, score: scoreWord(word, query, tokens) }))
     .filter((r) => r.score > 0)
     .sort((a, b) => b.score - a.score || a.index - b.index)
-    .map((r) => r.word)
+    .map(({ word, score }) => ({ word, score }))
+}
+
+/** Returns the matching words, best match first. An empty query returns every word. */
+export function searchWords(words: Word[], rawQuery: string): Word[] {
+  return rankWords(words, rawQuery).map((r) => r.word)
 }

@@ -13,6 +13,8 @@ import { SentenceLessonPage } from './features/sentences/SentenceLessonPage'
 import { SentencesPage } from './features/sentences/SentencesPage'
 import { SettingsPage } from './features/settings/SettingsPage'
 import { TodayPage } from './features/today/TodayPage'
+import { WritingEditorPage } from './features/writing/WritingEditorPage'
+import { WritingPage } from './features/writing/WritingPage'
 import { MyWordsPage } from './features/words/MyWordsPage'
 import { protectStorage } from './store/backup'
 import { useDisplaySettings } from './store/displaySettings'
@@ -24,6 +26,7 @@ const builtPages: Record<string, ReactElement> = {
   '/explore': <ExplorePage />,
   '/review': <ReviewPage />,
   '/sentences': <SentencesPage />,
+  '/write': <WritingPage />,
   '/settings': <SettingsPage />,
   '/words': <MyWordsPage />,
 }
@@ -44,6 +47,7 @@ const router = createBrowserRouter([
       })),
       { path: '/explore/:wordId', element: <WordPage /> },
       { path: '/sentences/:patternId', element: <SentenceLessonPage /> },
+      { path: '/write/:situationId', element: <WritingEditorPage /> },
       { path: '/more', element: <MorePage /> },
       { path: '/profiles/new', element: <NewProfilePage /> },
       { path: '*', element: <NotFoundPage /> },

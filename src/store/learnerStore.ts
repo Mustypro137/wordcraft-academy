@@ -4,7 +4,7 @@ import { addActivity, type Activity } from '../logic/activity'
 import { localDate } from '../logic/dates'
 import type { AnswerResult } from '../logic/spacedRepetition'
 import { applyAnswer, applyKnowledge, restoreWord, type KnowledgeAction, type WordStates } from '../logic/wordStates'
-import type { WordState } from '../types'
+import type { WordState, WritingData } from '../types'
 import { migrate, SCHEMA_VERSION, type SavedData } from './backup'
 import {
   addProfile,
@@ -33,6 +33,20 @@ interface LearnerStore extends SavedData {
   restoreWord: (wordId: string, previous: WordState | undefined) => void
   /** One correct sentence in the Sentence Builder. `stage` = a lesson stage just completed (1–3). */
   practiseSentence: (patternId: string, stage?: number) => void
+  /** Writing Studio: keep an unfinished text, finish it, or delete a finished one */
+  saveDraft: (situationId: string, text: string) => void
+  finishWriting: (situationId: string, text: string) => void
+  deletePiece: (pieceId: string) => void
+}
+
+/** "My writing" keeps the newest pieces, so saved data stays small */
+export const MAX_PIECES = 30
+
+const NO_WRITING: WritingData = { drafts: {}, pieces: [] }
+
+/** The active profile's Writing Studio data */
+export function useWriting() {
+  return useLearnerStore((s) => (s.activeProfileId && s.writing[s.activeProfileId]) || NO_WRITING)
 }
 
 /** The store change that adds `amount` practised words to today, for one profile */
@@ -51,6 +65,7 @@ export const useLearnerStore = create<LearnerStore>()(
       wordStates: {},
       activity: {},
       sentenceProgress: {},
+      writing: {},
       addProfile: (input) => set((s) => addProfile(s, input, crypto.randomUUID(), new Date().toISOString())),
       updateProfile: (id, changes) => set((s) => updateProfile(s, id, changes)),
       switchProfile: (id) => set((s) => switchProfile(s, id)),
@@ -60,10 +75,42 @@ export const useLearnerStore = create<LearnerStore>()(
           const wordStates = { ...s.wordStates }
           const activity = { ...s.activity }
           const sentenceProgress = { ...s.sentenceProgress }
+          const writing = { ...s.writing }
           delete wordStates[id]
           delete activity[id]
           delete sentenceProgress[id]
-          return { ...removeProfile(s, id), wordStates, activity, sentenceProgress }
+          delete writing[id]
+          return { ...removeProfile(s, id), wordStates, activity, sentenceProgress, writing }
+        }),
+      // Called while typing. An empty draft is removed.
+      saveDraft: (situationId, text) =>
+        set((s) => {
+          const id = s.activeProfileId
+          if (!id) return s
+          const data = s.writing[id] ?? NO_WRITING
+          const drafts = { ...data.drafts, [situationId]: text }
+          if (text.trim() === '') delete drafts[situationId]
+          return { writing: { ...s.writing, [id]: { ...data, drafts } } }
+        }),
+      // A finished piece goes to "My writing" and counts as one practised today
+      finishWriting: (situationId, text) =>
+        set((s) => {
+          const id = s.activeProfileId
+          if (!id) return s
+          const now = new Date()
+          const data = s.writing[id] ?? NO_WRITING
+          const drafts = { ...data.drafts }
+          delete drafts[situationId]
+          const piece = { id: crypto.randomUUID(), situationId, text: text.trim(), finishedAt: now.toISOString() }
+          const pieces = [piece, ...data.pieces].slice(0, MAX_PIECES)
+          return { ...countPractice(s, id, now, 1), writing: { ...s.writing, [id]: { drafts, pieces } } }
+        }),
+      deletePiece: (pieceId) =>
+        set((s) => {
+          const id = s.activeProfileId
+          if (!id) return s
+          const data = s.writing[id] ?? NO_WRITING
+          return { writing: { ...s.writing, [id]: { ...data, pieces: data.pieces.filter((p) => p.id !== pieceId) } } }
         }),
       // Every correct sentence counts as one practised today
       practiseSentence: (patternId, stage) =>
@@ -123,6 +170,7 @@ export const useLearnerStore = create<LearnerStore>()(
         wordStates: s.wordStates,
         activity: s.activity,
         sentenceProgress: s.sentenceProgress,
+        writing: s.writing,
       }),
     },
   ),
