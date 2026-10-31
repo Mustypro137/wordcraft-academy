@@ -56,7 +56,7 @@ export function SettingsPage() {
           onChange={(goal) => update({ dailyGoal: Number(goal) as DailyGoal })}
         />
         <p className={styles.note}>
-          Every review answer counts as one word, and so does every word you save for the first time.
+          Each review answer, each word you save for the first time and each correct sentence counts as one.
         </p>
       </section>
 

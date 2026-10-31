@@ -16,11 +16,12 @@ const v1 = {
   activeProfileId: 'p1',
 }
 
-describe('migrate', () => {
-  const v3Profiles = v1.profiles.map((p) => ({ ...p, dailyGoal: 10 }))
+/** The same profiles in today's shape */
+const profiles = v1.profiles.map((p) => ({ ...p, dailyGoal: 10 as const }))
 
-  it('upgrades version 1 all the way: word states, daily goal and activity', () => {
-    expect(migrate(v1, 1)).toEqual({ ...v1, profiles: v3Profiles, wordStates: {}, activity: {} })
+describe('migrate', () => {
+  it('upgrades version 1 all the way', () => {
+    expect(migrate(v1, 1)).toEqual({ ...v1, profiles, wordStates: {}, activity: {}, sentenceProgress: {} })
   })
 
   it('keeps version 2 word states and adds a goal of 10 and empty activity', () => {
@@ -29,15 +30,20 @@ describe('migrate', () => {
         improve: { collection: 'learning', box: 1, due: '2026-11-01', correctDays: [], changedAt: '2026-10-31T09:00:00.000Z' },
       },
     }
-    expect(migrate({ ...v1, wordStates }, 2)).toEqual({ ...v1, profiles: v3Profiles, wordStates, activity: {} })
+    expect(migrate({ ...v1, wordStates }, 2)).toEqual({ ...v1, profiles, wordStates, activity: {}, sentenceProgress: {} })
+  })
+
+  it('keeps version 3 activity and adds empty Sentence Builder progress', () => {
+    const v3 = { ...v1, profiles, wordStates: {}, activity: { p1: { '2026-10-31': 4 } } }
+    expect(migrate(v3, 3)).toEqual({ ...v3, sentenceProgress: {} })
   })
 })
 
 describe('backup file', () => {
   const now = new Date(2026, 9, 31, 22, 15)
+  const data = { ...v1, profiles, wordStates: {}, activity: {}, sentenceProgress: {} }
 
   it('holds the saved data, its version and the time', () => {
-    const data = { ...v1, profiles: v1.profiles.map((p) => ({ ...p, dailyGoal: 10 as const })), wordStates: {}, activity: {} }
     expect(createBackup(data, now)).toEqual({
       app: 'wordcraft-academy',
       schemaVersion: SCHEMA_VERSION,
@@ -47,14 +53,14 @@ describe('backup file', () => {
   })
 
   it('leaves out anything that is not saved data, like store functions', () => {
-    const store = {
-      ...v1,
-      profiles: v1.profiles.map((p) => ({ ...p, dailyGoal: 10 as const })),
-      wordStates: {},
-      activity: {},
-      setKnowledge: () => {},
-    }
-    expect(Object.keys(createBackup(store, now).data)).toEqual(['profiles', 'activeProfileId', 'wordStates', 'activity'])
+    const store = { ...data, setKnowledge: () => {} }
+    expect(Object.keys(createBackup(store, now).data)).toEqual([
+      'profiles',
+      'activeProfileId',
+      'wordStates',
+      'activity',
+      'sentenceProgress',
+    ])
   })
 
   it('names the file with the local date', () => {

@@ -66,6 +66,44 @@ export interface WordState {
   changedAt: string
 }
 
+/** One sentence to build from word tiles, with the situation it fits */
+export interface SentenceExercise {
+  /** Which age groups see it: kids get kids' topics, adults get work topics */
+  ages: AgeGroup[]
+  /** When you would say it: 'Your friend shows you a new game.' */
+  situation: string
+  /** The answer. Each word, with its punctuation, becomes one tile. */
+  sentence: string
+}
+
+/** One sentence pattern in the Sentence Builder, like "I think…" */
+export interface SentencePattern {
+  /** Unique, lowercase, words joined by hyphens: 'i-think' */
+  id: string
+  /** Short name: 'I think…' */
+  title: string
+  /** The shape of the sentence: fixed words, and slots (slot: true) for your own words */
+  shape: { text: string; slot?: boolean }[]
+  /** When to use it, in one or two sentences */
+  whenToUse: string
+  examples: string[]
+  /** What "Write your own" checks. Every rule given here must pass. */
+  check: {
+    /** The sentence starts with one of these */
+    starts?: string[]
+    /** The sentence contains one of these words */
+    contains?: string[]
+    /** The sentence has don't, can't, isn't, not… */
+    negative?: boolean
+    /** The sentence ends with a question mark */
+    question?: boolean
+  }
+  /** The task for "Write your own" */
+  writePrompt: string
+  /** In lesson order. Each age group should see at least 4. */
+  exercises: SentenceExercise[]
+}
+
 /** One vocabulary entry. Every word in src/data/words follows this shape. */
 export interface Word {
   /** Unique, lowercase, words joined by hyphens: 'follow-up' */

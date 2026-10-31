@@ -1,0 +1,363 @@
+.page {
+  max-width: 48rem;
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-6);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.intro {
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+.heading {
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.heading:focus {
+  outline: none;
+}
+
+.small {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.back {
+  justify-self: start;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* Pattern shape: fixed words in bold, your words in dashed slots */
+.shape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-word);
+  font-size: var(--text-md);
+  line-height: 1.6;
+}
+
+.fixed {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.slot {
+  padding: 0 var(--space-2);
+  border: 1.5px dashed var(--ink-soft);
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* Stage dots */
+.stageDots {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.dots span {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--ink-soft);
+  border-radius: 50%;
+}
+
+.dots span[data-on] {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+/* Pattern list */
+.patternList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.patternCard {
+  height: 100%;
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .patternCard:hover {
+    border-color: var(--ink-soft);
+  }
+
+  .patternCard:hover .patternTitle {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+}
+
+.patternCard .shape {
+  font-size: var(--text-base);
+}
+
+.patternTitle {
+  font-weight: 700;
+}
+
+/* Lesson */
+.lessonHeader {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: calc(-1 * var(--space-3));
+}
+
+.examples {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.examples ul,
+.compare ul {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: 1.2em;
+  font-family: var(--font-word);
+}
+
+.practice {
+  display: grid;
+  gap: var(--space-4);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.practiceTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.startPractice {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.stageList {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: 1.4em;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* One exercise */
+.practiceCard {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 479px) {
+  .practiceCard {
+    padding: var(--space-4);
+  }
+}
+
+.situation {
+  color: var(--ink-soft);
+}
+
+/* The sentence being built */
+.built {
+  position: relative;
+  min-height: 3.5rem;
+  padding: var(--space-2) 0;
+  border-bottom: 2px solid var(--line);
+}
+
+.built[data-done] {
+  border-bottom-color: var(--st-known);
+}
+
+.builtEmpty {
+  position: absolute;
+  inset: var(--space-2) 0 auto;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  line-height: 2.5rem;
+  pointer-events: none;
+}
+
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--ink);
+  font: inherit;
+  font-family: var(--font-word);
+  font-size: var(--text-md);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+
+.tile[data-placed] {
+  background: var(--surface);
+  border-color: var(--ink-soft);
+}
+
+.tile:disabled {
+  cursor: default;
+  border-color: transparent;
+  background: transparent;
+  padding-inline: 2px;
+}
+
+@media (hover: hover) {
+  .tile:not(:disabled):hover {
+    border-color: var(--ink);
+  }
+}
+
+.tile:not(:disabled):active {
+  transform: scale(0.96);
+}
+
+.tile:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* The hinted tile: a dashed focus-blue ring (highlighter colors are only for word states) */
+.tile[data-hint] {
+  border: 2px dashed var(--focus);
+  font-weight: 600;
+}
+
+.feedback {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.feedback:empty {
+  display: none;
+}
+
+.correct strong {
+  margin-right: var(--space-1);
+}
+
+.tips {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+/* Dictionary words, suggestions and examples to compare */
+.sentenceWords,
+.suggestions,
+.compare {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.sentenceWords ul,
+.suggestions ul {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wordLink,
+.suggestionWord {
+  font-family: var(--font-word);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.writeBox {
+  width: 100%;
+  min-height: 5.5rem;
+  resize: vertical;
+  font-family: var(--font-word);
+  font-size: max(1rem, var(--text-md));
+  line-height: 1.5;
+}
+
+.writeBox[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .patternCard {
+    transition: none;
+  }
+
+  .tile:not(:disabled):active {
+    transform: none;
+  }
+}

@@ -12,6 +12,8 @@ export interface SavedData extends ProfilesState {
   wordStates: Record<string, WordStates>
   /** Profile id → words practised on each day */
   activity: Record<string, Activity>
+  /** Profile id → pattern id → highest Sentence Builder stage completed (1–3) */
+  sentenceProgress: Record<string, Record<string, number>>
 }
 
 /**
@@ -21,8 +23,9 @@ export interface SavedData extends ProfilesState {
  * 1: profiles (Step 5)
  * 2: + word states for each profile (Step 7)
  * 3: + daily goal for each profile, + activity per day (Step 9)
+ * 4: + Sentence Builder progress (Step 10)
  */
-export const SCHEMA_VERSION = 3
+export const SCHEMA_VERSION = 4
 
 /**
  * Converts data saved by an older version to the current shape, one version at a time,
@@ -40,6 +43,7 @@ export function migrate(saved: unknown, version: number): SavedData {
       activity: {},
     }
   }
+  if (version < 4) data = { ...data, sentenceProgress: {} }
   return data
 }
 
@@ -52,12 +56,12 @@ export interface BackupFile {
 }
 
 export function createBackup(data: SavedData, now: Date): BackupFile {
-  const { profiles, activeProfileId, wordStates, activity } = data
+  const { profiles, activeProfileId, wordStates, activity, sentenceProgress } = data
   return {
     app: 'wordcraft-academy',
     schemaVersion: SCHEMA_VERSION,
     exportedAt: now.toISOString(),
-    data: { profiles, activeProfileId, wordStates, activity },
+    data: { profiles, activeProfileId, wordStates, activity, sentenceProgress },
   }
 }
 

@@ -82,15 +82,15 @@ export function TodayPage() {
           </h2>
           <p className={styles.big}>
             {Math.min(done, goal)} / {goal}
-            <span className="visually-hidden"> words practised today</span>
+            <span className="visually-hidden"> practised today</span>
           </p>
           <progress className={styles.bar} value={Math.min(done, goal)} max={goal} aria-hidden="true" />
           <p className={styles.soft}>
             {done >= goal
               ? 'Goal reached. Well done! Anything more is a bonus.'
               : due > 0
-                ? 'Review answers and new words both count.'
-                : 'Save a few new words in Explore to reach your goal.'}
+                ? 'Reviews, new words and sentences all count.'
+                : 'Save new words in Explore or build sentences to reach your goal.'}
           </p>
         </section>
       </div>

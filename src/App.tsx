@@ -9,6 +9,8 @@ import { CreateProfile } from './features/onboarding/CreateProfile'
 import { NotFoundPage } from './features/placeholder/NotFoundPage'
 import { PlaceholderPage } from './features/placeholder/PlaceholderPage'
 import { ReviewPage } from './features/review/ReviewPage'
+import { SentenceLessonPage } from './features/sentences/SentenceLessonPage'
+import { SentencesPage } from './features/sentences/SentencesPage'
 import { SettingsPage } from './features/settings/SettingsPage'
 import { TodayPage } from './features/today/TodayPage'
 import { MyWordsPage } from './features/words/MyWordsPage'
@@ -21,6 +23,7 @@ const builtPages: Record<string, ReactElement> = {
   '/': <TodayPage />,
   '/explore': <ExplorePage />,
   '/review': <ReviewPage />,
+  '/sentences': <SentencesPage />,
   '/settings': <SettingsPage />,
   '/words': <MyWordsPage />,
 }
@@ -40,6 +43,7 @@ const router = createBrowserRouter([
         element: builtPages[section.path] ?? <PlaceholderPage section={section} />,
       })),
       { path: '/explore/:wordId', element: <WordPage /> },
+      { path: '/sentences/:patternId', element: <SentenceLessonPage /> },
       { path: '/more', element: <MorePage /> },
       { path: '/profiles/new', element: <NewProfilePage /> },
       { path: '*', element: <NotFoundPage /> },
