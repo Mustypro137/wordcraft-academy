@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react'
+import { useEffect, type ReactElement } from 'react'
 import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router'
 import { AppShell } from './components/AppShell/AppShell'
 import { sections } from './components/AppShell/sections'
@@ -9,6 +9,8 @@ import { CreateProfile } from './features/onboarding/CreateProfile'
 import { NotFoundPage } from './features/placeholder/NotFoundPage'
 import { PlaceholderPage } from './features/placeholder/PlaceholderPage'
 import { SettingsPage } from './features/settings/SettingsPage'
+import { MyWordsPage } from './features/words/MyWordsPage'
+import { protectStorage } from './store/backup'
 import { useDisplaySettings } from './store/displaySettings'
 import { useActiveProfile } from './store/learnerStore'
 
@@ -16,6 +18,7 @@ import { useActiveProfile } from './store/learnerStore'
 const builtPages: Record<string, ReactElement> = {
   '/explore': <ExplorePage />,
   '/settings': <SettingsPage />,
+  '/words': <MyWordsPage />,
 }
 
 function NewProfilePage() {
@@ -43,6 +46,12 @@ const router = createBrowserRouter([
 function App() {
   const profile = useActiveProfile()
   useDisplaySettings(profile)
+
+  // Once there is something worth keeping, ask the browser not to delete it
+  const hasProfile = Boolean(profile)
+  useEffect(() => {
+    if (hasProfile) protectStorage().catch(() => {})
+  }, [hasProfile])
 
   // No profile yet (first visit, or the last one was deleted): welcome screens
   if (!profile) {

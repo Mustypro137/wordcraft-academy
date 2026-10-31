@@ -46,6 +46,22 @@ export interface Profile {
   createdAt: string
 }
 
+/** The four personal collections a word can be in */
+export type Collection = 'unfamiliar' | 'learning' | 'known' | 'mastered'
+
+/** What one learner remembers about one word. Saved separately for each profile. */
+export interface WordState {
+  collection: Collection
+  /** Leitner box 0–5: the higher the box, the longer until the next review */
+  box: number
+  /** Next review day, as a local date: '2026-10-31' */
+  due: string
+  /** Local dates of correct answers without hints. Review uses them to award Mastered. */
+  correctDays: string[]
+  /** When the learner last changed it, as an ISO date string */
+  changedAt: string
+}
+
 /** One vocabulary entry. Every word in src/data/words follows this shape. */
 export interface Word {
   /** Unique, lowercase, words joined by hyphens: 'follow-up' */

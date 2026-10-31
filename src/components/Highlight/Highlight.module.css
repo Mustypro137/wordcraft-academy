@@ -1,0 +1,48 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* The strong color as a small dot, so the tag still reads on any background */
+.tag::before {
+  content: "";
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+}
+
+.unfamiliar {
+  background: var(--hl-unfamiliar);
+}
+.unfamiliar::before {
+  background: var(--st-unfamiliar);
+}
+
+.learning {
+  background: var(--hl-learning);
+}
+.learning::before {
+  background: var(--st-learning);
+}
+
+.known {
+  background: var(--hl-known);
+}
+.known::before {
+  background: var(--st-known);
+}
+
+.mastered {
+  background: var(--hl-mastered);
+}
+.mastered::before {
+  background: var(--st-mastered);
+}

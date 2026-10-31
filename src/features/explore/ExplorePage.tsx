@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
+import { Highlight } from '../../components/Highlight/Highlight'
 import { categories } from '../../data/categories'
+import { collections } from '../../data/collections'
 import { levelLabel, wordLevelsFor } from '../../data/levels'
 import { levelOptions } from '../../data/profileOptions'
 import { words } from '../../data/words'
 import { searchWords } from '../../logic/wordSearch'
-import { useActiveProfile } from '../../store/learnerStore'
-import type { CategoryId, LearningLevel } from '../../types'
+import { useActiveProfile, useWordStates } from '../../store/learnerStore'
+import type { CategoryId, Collection, LearningLevel } from '../../types'
 import styles from './ExplorePage.module.css'
+import type { BackLink } from './WordPage'
 
 // Only categories that have at least one word, in the usual order
 const usedCategories = (Object.keys(categories) as CategoryId[]).filter((id) =>
@@ -24,6 +27,9 @@ export function ExplorePage() {
   const [query, setQuery] = useState(params.get('q') ?? '')
   const level = (params.get('level') ?? '') as LearningLevel | ''
   const category = (params.get('category') ?? '') as CategoryId | ''
+  // '' = all words, 'new' = not in My Words yet, or one collection
+  const mine = (params.get('mine') ?? '') as Collection | 'new' | ''
+  const states = useWordStates()
 
   function setParam(key: string, value: string) {
     setParams(
@@ -41,9 +47,14 @@ export function ExplorePage() {
   const isKids = profile?.ageGroup === 'kids'
   const available = isKids ? words.filter((w) => w.forKids) : words
   const results = searchWords(available, query).filter(
-    (w) => (!level || wordLevelsFor[level].includes(w.level)) && (!category || w.categories.includes(category)),
+    (w) =>
+      (!level || wordLevelsFor[level].includes(w.level)) &&
+      (!category || w.categories.includes(category)) &&
+      (!mine || (mine === 'new' ? !states[w.id] : states[w.id]?.collection === mine)),
   )
-  const hasFilters = Boolean(query || level || category)
+  const hasFilters = Boolean(query || level || category || mine)
+  // A word page's "Back" returns here with the same search and filters
+  const backLink: BackLink = { path: params.size ? `/explore?${params}` : '/explore', label: 'Explore' }
 
   function clearAll() {
     setQuery('')
@@ -114,6 +125,20 @@ export function ExplorePage() {
             ))}
           </select>
         </div>
+        <div className="field">
+          <label htmlFor="explore-mine" className="field-label">
+            My Words
+          </label>
+          <select id="explore-mine" className="input" value={mine} onChange={(e) => setParam('mine', e.target.value)}>
+            <option value="">All words</option>
+            <option value="new">Not in My Words yet</option>
+            {collections.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </search>
 
       <div className={styles.status}>
@@ -132,12 +157,13 @@ export function ExplorePage() {
         <ul className={styles.list}>
           {results.map((word) => (
             <li key={word.id}>
-              <Link to={`/explore/${word.id}`} state={{ from: params.toString() }} className={styles.row}>
+              <Link to={`/explore/${word.id}`} state={{ back: backLink }} className={styles.row}>
                 <span className={styles.rowTop}>
                   <span className={styles.word}>{word.word}</span>
                   <span className={styles.meta}>
                     {word.partOfSpeech} · {levelLabel(word.level)}
                   </span>
+                  {states[word.id] && <Highlight collection={states[word.id].collection} />}
                 </span>
                 <span className={styles.definition}>{word.definition}</span>
               </Link>

@@ -1,0 +1,29 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+/* Takes no space while empty, but stays on the page so screen readers announce it */
+.row:has(.message:empty) {
+  position: absolute;
+}
+
+.message:focus {
+  outline: none;
+}
+
+.undo {
+  min-height: 2.75rem;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}

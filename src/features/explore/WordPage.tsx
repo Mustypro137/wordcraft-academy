@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import { Link, useLocation, useParams } from 'react-router'
+import { KnowledgeButtons } from '../../components/KnowledgeButtons/KnowledgeButtons'
 import { levelLabel } from '../../data/levels'
 import { words } from '../../data/words'
 import { markWord } from '../../logic/exercise'
@@ -10,6 +11,12 @@ import { WordExercise } from './WordExercise'
 import styles from './WordPage.module.css'
 
 const wordsById = new Map(words.map((w) => [w.id, w]))
+
+/** Where "Back" goes. Lists pass it in the link's state: <Link state={{ back }}> */
+export interface BackLink {
+  path: string
+  label: string
+}
 
 /** The sentence with the word (or its form) in bold */
 function Marked({ sentence, word }: { sentence: string; word: Word }) {
@@ -40,15 +47,14 @@ export function WordPage() {
   const word = wordsById.get(wordId)
   if (!word) return <NotFoundPage />
 
-  // Return to the list with the same search and filters, if we came from it
-  const from = (location.state as { from?: string } | null)?.from
-  const backTo = from ? `/explore?${from}` : '/explore'
+  // Return to the list we came from (with its search, filters or tab), or to Explore
+  const back = (location.state as { back?: BackLink } | null)?.back ?? { path: '/explore', label: 'Explore' }
 
   return (
     <article className={styles.page}>
       <title>{`${word.word} · WordCraft Academy`}</title>
-      <Link to={backTo} className={styles.back}>
-        ← Back to Explore
+      <Link to={back.path} className={styles.back}>
+        ← Back to {back.label}
       </Link>
 
       <header className={styles.header}>
@@ -68,6 +74,9 @@ export function WordPage() {
       </header>
 
       <p className={styles.definition}>{word.definition}</p>
+
+      {/* "key" clears the last message when you open another word */}
+      <KnowledgeButtons key={word.id} wordId={word.id} />
 
       <section className={styles.section} aria-labelledby="examples">
         <h2 id="examples" className={styles.heading}>

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { ChoiceGroup } from '../../components/ChoiceGroup/ChoiceGroup'
 import {
@@ -8,6 +8,7 @@ import {
   textSizeOptions,
   themeOptions,
 } from '../../data/profileOptions'
+import { backupFileName, createBackup, protectStorage } from '../../store/backup'
 import { useActiveProfile, useLearnerStore } from '../../store/learnerStore'
 import { cleanName, isValidName, MAX_NAME_LENGTH } from '../../store/profiles'
 import type { Profile } from '../../types'
@@ -88,11 +89,51 @@ export function SettingsPage() {
         <p className={styles.text}>
           Your profiles and progress are saved only in this browser, on this device. Nothing is sent to a server.
         </p>
-        <p className={styles.text}>
-          If you clear this browser's data, they are deleted. Saving a backup file arrives in Step 13 of the plan.
-        </p>
+        <BackupPanel />
       </section>
     </article>
+  )
+}
+
+function BackupPanel() {
+  // null while we ask the browser
+  const [isProtected, setIsProtected] = useState<boolean | null>(null)
+  useEffect(() => {
+    protectStorage().then(setIsProtected, () => setIsProtected(false))
+  }, [])
+
+  function download() {
+    const now = new Date()
+    const backup = createBackup(useLearnerStore.getState(), now)
+    // Make a file in memory, "click" a hidden link to save it, then free the memory
+    const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' }))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = backupFileName(now)
+    link.click()
+    // Wait a moment: some browsers cancel the download if the memory is freed at once
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
+
+  return (
+    <>
+      <p className={styles.text}>
+        {isProtected === null
+          ? 'Checking whether this browser keeps your data safe…'
+          : isProtected
+            ? 'This browser has agreed to keep your data, even when space runs low.'
+            : "This browser may delete your data if space runs low or you don't visit for a while (Safari on iPhone can, after about 7 days). Download a backup now and then."}
+      </p>
+      <p className={styles.text}>
+        A backup file holds every profile on this device and all their words. Keep it somewhere safe. Loading a
+        backup back into the app arrives in Step 13 of the plan.
+      </p>
+      <div>
+        <button type="button" className="btn btn-secondary" onClick={download}>
+          Download my data
+        </button>
+      </div>
+    </>
   )
 }
 
