@@ -1,0 +1,303 @@
+.page {
+  max-width: 48rem;
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-6);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.intro {
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+.header {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: calc(-1 * var(--space-3));
+}
+
+.heading {
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.section {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.soft {
+  color: var(--ink-soft);
+}
+
+.small {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.back {
+  justify-self: start;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Topic list */
+.topicList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.topicCard {
+  height: 100%;
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .topicCard:hover {
+    border-color: var(--ink-soft);
+  }
+
+  .topicCard:hover .topicTitle {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+}
+
+.topicTitle {
+  font-weight: 700;
+}
+
+/* Kids note */
+.kidsNote {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+}
+
+.kidsTitle {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Key words */
+.keyWords {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.keyWords li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.keyWord {
+  flex: 1 1 18rem;
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .keyWord:hover .keyWordName {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+}
+
+/* Technical words use the code font, as in the design plan */
+.keyWordName,
+.meaningWord {
+  font-family: var(--font-code);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.newTag {
+  padding: 1px var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+/* Real sentences */
+.breakdowns {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breakdown {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 479px) {
+  .breakdown {
+    padding: var(--space-4);
+  }
+}
+
+.kind {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.techSentence {
+  font-family: var(--font-word);
+  font-size: var(--text-md);
+  line-height: 1.7;
+}
+
+/* A word you can tap: dotted underline, solid once its meaning is open */
+/* The negative margin cancels the padding, so there is no gap before punctuation */
+.term {
+  margin: 0 -2px;
+  padding: 0 2px;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline dotted var(--ink-soft);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+}
+
+.term[aria-expanded='true'] {
+  background: var(--surface-2);
+  text-decoration-style: solid;
+  text-decoration-color: var(--ink);
+}
+
+.term:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.meanings {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  list-style: none;
+}
+
+.plain {
+  font-family: var(--font-word);
+}
+
+/* Your turn */
+.task {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 479px) {
+  .task {
+    padding: var(--space-4);
+  }
+}
+
+.taskText {
+  font-weight: 600;
+}
+
+.taskBox {
+  width: 100%;
+  min-height: 6rem;
+  resize: vertical;
+  font-family: var(--font-word);
+  font-size: max(1rem, var(--text-md));
+  line-height: 1.5;
+}
+
+.taskFeedback:empty {
+  display: none;
+}
+
+.issues {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.correct strong {
+  margin-right: var(--space-1);
+}
+
+.yourText {
+  font-family: var(--font-word);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topicCard {
+    transition: none;
+  }
+}

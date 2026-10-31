@@ -1,7 +1,15 @@
 import { Link } from 'react-router'
+import { topicsById } from '../../data/developerTopics'
 import { situationsById, writingSituations } from '../../data/writingSituations'
 import { useActiveProfile, useLearnerStore, useWriting } from '../../store/learnerStore'
 import styles from './Writing.module.css'
+
+/** Writing Studio pieces use a situation id; Developer English answers use "developer:<topic id>" */
+function pieceTitle(situationId: string) {
+  const topic = topicsById.get(situationId.replace(/^developer:/, ''))
+  if (situationId.startsWith('developer:') && topic) return `Developer English: ${topic.title}`
+  return situationsById.get(situationId)?.title ?? 'Writing'
+}
 
 function formatWhen(iso: string) {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -49,7 +57,7 @@ export function WritingPage() {
               <li key={piece.id}>
                 <details className={styles.piece}>
                   <summary>
-                    <span className={styles.pieceTitle}>{situationsById.get(piece.situationId)?.title ?? 'Writing'}</span>
+                    <span className={styles.pieceTitle}>{pieceTitle(piece.situationId)}</span>
                     <span className={styles.soft}>{formatWhen(piece.finishedAt)}</span>
                   </summary>
                   <p className={styles.pieceText}>{piece.text}</p>

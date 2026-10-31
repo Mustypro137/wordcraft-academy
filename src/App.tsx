@@ -2,6 +2,8 @@ import { useEffect, type ReactElement } from 'react'
 import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router'
 import { AppShell } from './components/AppShell/AppShell'
 import { sections } from './components/AppShell/sections'
+import { DeveloperPage } from './features/developer/DeveloperPage'
+import { DeveloperTopicPage } from './features/developer/DeveloperTopicPage'
 import { ExplorePage } from './features/explore/ExplorePage'
 import { WordPage } from './features/explore/WordPage'
 import { MorePage } from './features/more/MorePage'
@@ -27,6 +29,7 @@ const builtPages: Record<string, ReactElement> = {
   '/review': <ReviewPage />,
   '/sentences': <SentencesPage />,
   '/write': <WritingPage />,
+  '/developer': <DeveloperPage />,
   '/settings': <SettingsPage />,
   '/words': <MyWordsPage />,
 }
@@ -48,6 +51,7 @@ const router = createBrowserRouter([
       { path: '/explore/:wordId', element: <WordPage /> },
       { path: '/sentences/:patternId', element: <SentenceLessonPage /> },
       { path: '/write/:situationId', element: <WritingEditorPage /> },
+      { path: '/developer/:topicId', element: <DeveloperTopicPage /> },
       { path: '/more', element: <MorePage /> },
       { path: '/profiles/new', element: <NewProfilePage /> },
       { path: '*', element: <NotFoundPage /> },

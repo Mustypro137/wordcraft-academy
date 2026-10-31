@@ -145,6 +145,29 @@ export interface WritingData {
   pieces: WritingPiece[]
 }
 
+/** A real developer sentence, with its technical words explained */
+export interface TechSentence {
+  /** Where you would see it: 'Project requirement', 'Prompt for Claude Code'… */
+  kind: string
+  text: string
+  /** The same idea in plain English */
+  plain: string
+  /** Word id → a short meaning for this sentence. Each word must appear in the text. */
+  terms: Record<string, string>
+}
+
+/** A Developer English topic, like "Git and GitHub" */
+export interface DeveloperTopic {
+  id: string
+  title: string
+  summary: string
+  /** Dictionary words for this topic */
+  wordIds: string[]
+  sentences: TechSentence[]
+  /** "Your turn": what to write */
+  task: string
+}
+
 /** One vocabulary entry. Every word in src/data/words follows this shape. */
 export interface Word {
   /** Unique, lowercase, words joined by hyphens: 'follow-up' */
