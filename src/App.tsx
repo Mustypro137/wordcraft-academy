@@ -1,26 +1,63 @@
-import { useEffect, type ReactElement } from 'react'
+import { lazy, useEffect, type ComponentType, type ReactElement } from 'react'
 import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router'
 import { AppShell } from './components/AppShell/AppShell'
 import { sections } from './components/AppShell/sections'
-import { DeveloperPage } from './features/developer/DeveloperPage'
-import { DeveloperTopicPage } from './features/developer/DeveloperTopicPage'
-import { ExplorePage } from './features/explore/ExplorePage'
-import { WordPage } from './features/explore/WordPage'
 import { MorePage } from './features/more/MorePage'
 import { CreateProfile } from './features/onboarding/CreateProfile'
 import { NotFoundPage } from './features/placeholder/NotFoundPage'
 import { PlaceholderPage } from './features/placeholder/PlaceholderPage'
-import { ReviewPage } from './features/review/ReviewPage'
-import { SentenceLessonPage } from './features/sentences/SentenceLessonPage'
-import { SentencesPage } from './features/sentences/SentencesPage'
-import { SettingsPage } from './features/settings/SettingsPage'
 import { TodayPage } from './features/today/TodayPage'
-import { WritingEditorPage } from './features/writing/WritingEditorPage'
-import { WritingPage } from './features/writing/WritingPage'
-import { MyWordsPage } from './features/words/MyWordsPage'
 import { protectStorage } from './store/backup'
 import { useDisplaySettings } from './store/displaySettings'
 import { useActiveProfile } from './store/learnerStore'
+
+const RELOADED_KEY = 'wordcraft-reloaded-for-update'
+
+/**
+ * Code splitting: a page's code is downloaded only when the page is first opened,
+ * so the app starts faster. Today, the home page, is part of the main file.
+ *
+ * After a new version is deployed, an open tab may ask for a file that no longer exists.
+ * Then the page reloads once to get the new version (the flag stops it reloading again and again).
+ */
+function page<K extends string>(load: () => Promise<Record<K, ComponentType>>, name: K) {
+  return lazy(() =>
+    load().then(
+      (module) => {
+        sessionStorageSafe(() => sessionStorage.removeItem(RELOADED_KEY))
+        return { default: module[name] }
+      },
+      (error) => {
+        if (sessionStorageSafe(() => sessionStorage.getItem(RELOADED_KEY))) throw error
+        sessionStorageSafe(() => sessionStorage.setItem(RELOADED_KEY, '1'))
+        window.location.reload()
+        // Never settles: the page is reloading
+        return new Promise<never>(() => {})
+      },
+    ),
+  )
+}
+
+/** Browser storage can be blocked; then the reload guard simply doesn't apply */
+function sessionStorageSafe<T>(run: () => T): T | null {
+  try {
+    return run()
+  } catch {
+    return null
+  }
+}
+
+const ExplorePage = page(() => import('./features/explore/ExplorePage'), 'ExplorePage')
+const WordPage = page(() => import('./features/explore/WordPage'), 'WordPage')
+const MyWordsPage = page(() => import('./features/words/MyWordsPage'), 'MyWordsPage')
+const ReviewPage = page(() => import('./features/review/ReviewPage'), 'ReviewPage')
+const SentencesPage = page(() => import('./features/sentences/SentencesPage'), 'SentencesPage')
+const SentenceLessonPage = page(() => import('./features/sentences/SentenceLessonPage'), 'SentenceLessonPage')
+const WritingPage = page(() => import('./features/writing/WritingPage'), 'WritingPage')
+const WritingEditorPage = page(() => import('./features/writing/WritingEditorPage'), 'WritingEditorPage')
+const DeveloperPage = page(() => import('./features/developer/DeveloperPage'), 'DeveloperPage')
+const DeveloperTopicPage = page(() => import('./features/developer/DeveloperTopicPage'), 'DeveloperTopicPage')
+const SettingsPage = page(() => import('./features/settings/SettingsPage'), 'SettingsPage')
 
 // Sections that are built. Every other section still shows its placeholder.
 const builtPages: Record<string, ReactElement> = {

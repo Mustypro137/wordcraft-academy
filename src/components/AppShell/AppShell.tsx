@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { useActiveProfile } from '../../store/learnerStore'
 import { Icon } from '../Icon'
@@ -40,15 +40,14 @@ export function AppShell() {
   const { pathname } = useLocation()
   const profile = useActiveProfile()
   const mainRef = useRef<HTMLElement>(null)
-  const isFirstRender = useRef(true)
+  const lastPath = useRef(pathname)
 
   // After a page change, move keyboard and screen-reader focus to the new page,
   // so the learner does not have to tab through the whole menu again.
+  // Comparing addresses (not "is this the first run?") also works when React runs effects twice in development.
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
-      return
-    }
+    if (lastPath.current === pathname) return
+    lastPath.current = pathname
     mainRef.current?.focus()
   }, [pathname])
 
@@ -104,7 +103,16 @@ export function AppShell() {
       </nav>
 
       <main id="main" ref={mainRef} tabIndex={-1} className={styles.main}>
-        <Outlet />
+        {/* Pages load their code when first opened (see App.tsx); this shows meanwhile */}
+        <Suspense
+          fallback={
+            <p className={styles.loading} role="status">
+              Loading…
+            </p>
+          }
+        >
+          <Outlet />
+        </Suspense>
       </main>
 
       {/* Phone tab bar */}

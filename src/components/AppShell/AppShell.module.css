@@ -386,3 +386,8 @@
     color: var(--ink);
   }
 }
+
+/* Shown for a moment while a page's code loads */
+.loading {
+  color: var(--ink-soft);
+}
