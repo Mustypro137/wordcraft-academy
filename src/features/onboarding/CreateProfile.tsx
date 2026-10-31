@@ -5,6 +5,7 @@ import { requestPersistentStorage } from '../../store/displaySettings'
 import { useLearnerStore } from '../../store/learnerStore'
 import { isValidName, MAX_NAME_LENGTH } from '../../store/profiles'
 import type { AgeGroup, LearningLevel } from '../../types'
+import { LoadBackup } from '../settings/LoadBackup'
 import styles from './CreateProfile.module.css'
 
 interface CreateProfileProps {
@@ -132,6 +133,17 @@ export function CreateProfile({ firstVisit = false, onFinished, onCancel }: Crea
           </p>
         </div>
       </form>
+
+      {/* On a new device, a learner can bring everything back from a backup instead */}
+      {firstVisit && step === 0 && (
+        <section className={styles.restore} aria-labelledby="restore-title">
+          <p id="restore-title" className={styles.restoreTitle}>
+            Used WordCraft before?
+          </p>
+          <p className={styles.note}>Load the backup file you downloaded, and all your profiles and words come back.</p>
+          <LoadBackup />
+        </section>
+      )}
     </div>
   )
 }

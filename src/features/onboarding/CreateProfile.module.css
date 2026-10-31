@@ -60,3 +60,19 @@
   color: var(--ink-soft);
   font-size: var(--text-sm);
 }
+
+/* "Used WordCraft before?": restore from a backup on a new device */
+.restore {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.restore .note {
+  margin-bottom: 0;
+}
+
+.restoreTitle {
+  font-weight: 700;
+}

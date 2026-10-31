@@ -6,7 +6,10 @@ import { wordOfTheDay } from '../../logic/dailyWord'
 import { formatDay, localDate } from '../../logic/dates'
 import { nextReviewDay, pickReviewItems } from '../../logic/reviewSession'
 import { countByCollection } from '../../logic/wordStates'
-import { useActiveProfile, useActivity, useWordStates } from '../../store/learnerStore'
+import { useState } from 'react'
+import { lastBackup, needsBackupReminder } from '../../store/backupReminder'
+import { downloadBackup } from '../../store/downloadBackup'
+import { useActiveProfile, useActivity, useLearnerStore, useWordStates } from '../../store/learnerStore'
 import type { BackLink } from '../explore/WordPage'
 import styles from './TodayPage.module.css'
 
@@ -21,6 +24,9 @@ export function TodayPage() {
   const profile = useActiveProfile()
   const states = useWordStates()
   const activity = useActivity()
+  // The oldest profile on this device: with no backup yet, the reminder counts from then
+  const firstUse = useLearnerStore((s) => s.profiles.reduce<string | null>((a, p) => (a && a < p.createdAt ? a : p.createdAt), null))
+  const [reminder, setReminder] = useState<'auto' | 'hidden' | 'done'>('auto')
   if (!profile) return null
 
   const now = new Date()
@@ -34,6 +40,7 @@ export function TodayPage() {
   const word = wordOfTheDay(pool, states, today, profile.id)
   const counts = countByCollection(states)
   const total = collections.reduce((sum, c) => sum + counts[c.id], 0)
+  const showReminder = reminder === 'done' || (reminder === 'auto' && needsBackupReminder(lastBackup(), firstUse, now))
 
   return (
     <article className={styles.page}>
@@ -48,6 +55,41 @@ export function TodayPage() {
           </p>
         )}
       </header>
+
+      {showReminder && (
+        <section className={styles.reminder} aria-labelledby="backup-reminder" aria-live="polite">
+          {reminder === 'done' ? (
+            <p id="backup-reminder">Backup downloaded. Keep the file somewhere safe, like your cloud drive or email.</p>
+          ) : (
+            <>
+              <div>
+                <h2 id="backup-reminder" className={styles.reminderTitle}>
+                  Time for a backup
+                </h2>
+                <p className={styles.soft}>
+                  Your words are saved only in this browser. A backup file keeps them safe if the browser clears its
+                  data.
+                </p>
+              </div>
+              <div className={styles.reminderActions}>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => {
+                    downloadBackup()
+                    setReminder('done')
+                  }}
+                >
+                  Download a backup
+                </button>
+                <button type="button" className="btn btn-secondary" onClick={() => setReminder('hidden')}>
+                  Not now
+                </button>
+              </div>
+            </>
+          )}
+        </section>
+      )}
 
       <div className={styles.tiles}>
         <section className={styles.card} aria-labelledby="today-review">

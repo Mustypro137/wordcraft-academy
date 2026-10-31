@@ -37,6 +37,8 @@ interface LearnerStore extends SavedData {
   saveDraft: (situationId: string, text: string) => void
   finishWriting: (situationId: string, text: string) => void
   deletePiece: (pieceId: string) => void
+  /** Loading a backup: everything is replaced by the backup's data (already checked by readBackup) */
+  replaceAll: (data: SavedData) => void
 }
 
 /** "My writing" keeps the newest pieces, so saved data stays small */
@@ -104,6 +106,15 @@ export const useLearnerStore = create<LearnerStore>()(
           const piece = { id: crypto.randomUUID(), situationId, text: text.trim(), finishedAt: now.toISOString() }
           const pieces = [piece, ...data.pieces].slice(0, MAX_PIECES)
           return { ...countPractice(s, id, now, 1), writing: { ...s.writing, [id]: { drafts, pieces } } }
+        }),
+      replaceAll: (data) =>
+        set({
+          profiles: data.profiles,
+          activeProfileId: data.activeProfileId,
+          wordStates: data.wordStates,
+          activity: data.activity,
+          sentenceProgress: data.sentenceProgress,
+          writing: data.writing,
         }),
       deletePiece: (pieceId) =>
         set((s) => {

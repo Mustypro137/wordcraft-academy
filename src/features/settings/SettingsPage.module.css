@@ -119,3 +119,45 @@
 .confirmText {
   color: var(--error);
 }
+
+/* Loading a backup */
+.loadBackup {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.error {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.success {
+  font-weight: 600;
+}
+
+.preview {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.preview ul {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.previewTitle {
+  font-weight: 700;
+}
+
+.previewActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

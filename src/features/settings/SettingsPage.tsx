@@ -9,10 +9,12 @@ import {
   textSizeOptions,
   themeOptions,
 } from '../../data/profileOptions'
-import { backupFileName, createBackup, protectStorage } from '../../store/backup'
+import { protectStorage } from '../../store/backup'
+import { downloadBackup } from '../../store/downloadBackup'
 import { useActiveProfile, useLearnerStore } from '../../store/learnerStore'
 import { cleanName, isValidName, MAX_NAME_LENGTH } from '../../store/profiles'
 import type { DailyGoal, Profile } from '../../types'
+import { LoadBackup } from './LoadBackup'
 import styles from './SettingsPage.module.css'
 
 export function SettingsPage() {
@@ -113,19 +115,6 @@ function BackupPanel() {
     protectStorage().then(setIsProtected, () => setIsProtected(false))
   }, [])
 
-  function download() {
-    const now = new Date()
-    const backup = createBackup(useLearnerStore.getState(), now)
-    // Make a file in memory, "click" a hidden link to save it, then free the memory
-    const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' }))
-    const link = document.createElement('a')
-    link.href = url
-    link.download = backupFileName(now)
-    link.click()
-    // Wait a moment: some browsers cancel the download if the memory is freed at once
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
-  }
-
   return (
     <>
       <p className={styles.text}>
@@ -136,14 +125,15 @@ function BackupPanel() {
             : "This browser may delete your data if space runs low or you don't visit for a while (Safari on iPhone can, after about 7 days). Download a backup now and then."}
       </p>
       <p className={styles.text}>
-        A backup file holds every profile on this device and all their words. Keep it somewhere safe. Loading a
-        backup back into the app arrives in Step 13 of the plan.
+        A backup file holds every profile on this device, with all their words, progress and writing. Keep it
+        somewhere safe. To move to another device, download it here and load it there.
       </p>
       <div>
-        <button type="button" className="btn btn-secondary" onClick={download}>
+        <button type="button" className="btn btn-secondary" onClick={downloadBackup}>
           Download my data
         </button>
       </div>
+      <LoadBackup />
     </>
   )
 }
